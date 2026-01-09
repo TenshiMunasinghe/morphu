@@ -9,42 +9,55 @@
 		borderTopRightRadius?: string;
 		borderBottomLeftRadius?: string;
 		borderBottomRightRadius?: string;
-		padding?: string;
+		paddingTop?: string;
+		paddingRight?: string;
+		paddingBottom?: string;
+		paddingLeft?: string;
 		textSize?: string;
-		width?: string;
-		height?: string;
 		textOrientation?: string;
+		textAlign?: string;
 		fontFamily?: string;
 		fontWeight?: string;
 		content?: string;
 		backgroundColor?: string;
+		textColor?: string;
 	}
 
 	let {
+		border,
+		borderColor,
+		borderWidth,
+		borderStyle,
 		borderRadius = '8px',
-		padding = '16px',
+		paddingTop = '16px',
+		paddingRight = '16px',
+		paddingBottom = '16px',
+		paddingLeft = '16px',
 		textSize = '16px',
-		width = '400px',
-		height = 'auto',
 		textOrientation = 'horizontal-tb',
+		textAlign = 'left',
 		fontFamily = 'system-ui, sans-serif',
 		fontWeight = '400',
 		content = 'This is a sample social media post. You can customize its appearance using the form controls!',
-		backgroundColor = '#ffffff'
+		backgroundColor = '#ffffff',
+		textColor = '#000000'
 	}: Props = $props();
 </script>
 
 <div
 	class="post-container"
 	style:border-radius={borderRadius}
-	style:padding
+	style:padding-top={paddingTop}
+	style:padding-right={paddingRight}
+	style:padding-bottom={paddingBottom}
+	style:padding-left={paddingLeft}
 	style:font-size={textSize}
-	style:width
-	style:height
 	style:writing-mode={textOrientation}
+	style:text-align={textAlign}
 	style:font-family={fontFamily}
 	style:font-weight={fontWeight}
 	style:background-color={backgroundColor}
+	style:color={textColor}
 >
 	{content}
 </div>

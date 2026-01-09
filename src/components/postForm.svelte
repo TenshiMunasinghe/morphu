@@ -1,26 +1,56 @@
 <script lang="ts">
 	import Post from './post.svelte';
+	import Accordion from './accordion.svelte';
 
 	// Numerical values as numbers for sliders
-	let widthValue = $state(400);
-	let paddingValue = $state(16);
+	let paddingTopValue = $state(16);
+	let paddingRightValue = $state(16);
+	let paddingBottomValue = $state(16);
+	let paddingLeftValue = $state(16);
 	let borderRadiusValue = $state(8);
 	let textSizeValue = $state(16);
 
+	// Computed values for Y, X, and All sliders (using average)
+	let paddingYValue = $derived(Math.round((paddingTopValue + paddingBottomValue) / 2));
+	let paddingXValue = $derived(Math.round((paddingLeftValue + paddingRightValue) / 2));
+	let paddingAllValue = $derived(
+		Math.round((paddingTopValue + paddingRightValue + paddingBottomValue + paddingLeftValue) / 4)
+	);
+
+	// Functions to update padding values
+	function updatePaddingY(value: number) {
+		paddingTopValue = value;
+		paddingBottomValue = value;
+	}
+
+	function updatePaddingX(value: number) {
+		paddingLeftValue = value;
+		paddingRightValue = value;
+	}
+
+	function updatePaddingAll(value: number) {
+		paddingTopValue = value;
+		paddingRightValue = value;
+		paddingBottomValue = value;
+		paddingLeftValue = value;
+	}
+
 	// Computed string values for styles
-	let width = $derived(`${widthValue}px`);
-	let padding = $derived(`${paddingValue}px`);
+	let paddingTop = $derived(`${paddingTopValue}px`);
+	let paddingRight = $derived(`${paddingRightValue}px`);
+	let paddingBottom = $derived(`${paddingBottomValue}px`);
+	let paddingLeft = $derived(`${paddingLeftValue}px`);
 	let borderRadius = $derived(`${borderRadiusValue}px`);
 	let textSize = $derived(`${textSizeValue}px`);
-
-	let height = $state('auto');
 	let textOrientation = $state('horizontal-tb');
+	let textAlign = $state('left');
 	let fontFamily = $state('system-ui, sans-serif');
 	let fontWeight = $state('400');
 	let content = $state(
 		'This is a sample social media post. You can customize its appearance using the form controls!'
 	);
 	let backgroundColor = $state('#ffffff');
+	let textColor = $state('#000000');
 	let isFontSelectOpen = $state(false);
 
 	const fontFamilies = [
@@ -38,6 +68,13 @@
 		{ value: 'horizontal-tb', label: 'Horizontal' },
 		{ value: 'vertical-rl', label: 'Vertical (Right to Left)' },
 		{ value: 'vertical-lr', label: 'Vertical (Left to Right)' }
+	];
+
+	const textAlignments = [
+		{ value: 'left', label: 'Left' },
+		{ value: 'center', label: 'Center' },
+		{ value: 'right', label: 'Right' },
+		{ value: 'justify', label: 'Justify' }
 	];
 
 	function toggleFontSelect() {
@@ -75,22 +112,24 @@
 		<div class="preview-container">
 			<Post
 				{borderRadius}
-				{padding}
+				{paddingTop}
+				{paddingRight}
+				{paddingBottom}
+				{paddingLeft}
 				{textSize}
-				{width}
-				{height}
 				{textOrientation}
+				{textAlign}
 				{fontFamily}
 				{fontWeight}
 				{content}
 				{backgroundColor}
+				{textColor}
 			/>
 		</div>
 	</div>
 
 	<!-- Form Section - At bottom on mobile -->
 	<div class="form-section">
-		<h2 class="form-title">Customize Post Appearance</h2>
 		<form class="customization-form">
 			<div class="form-group">
 				<label for="content">Post Content</label>
@@ -102,56 +141,165 @@
 				></textarea>
 			</div>
 
-			<div class="form-row">
-				<div class="form-group">
-					<label for="width">
-						Width: <span class="value-display">{widthValue}px</span>
-					</label>
-					<div class="slider-container">
-						<input
-							type="range"
-							id="width"
-							min="200"
-							max="800"
-							step="10"
-							bind:value={widthValue}
-							class="slider"
-						/>
-						<div class="slider-labels">
-							<span>200px</span>
-							<span>800px</span>
+			<div class="form-group">
+				<div class="section-label">Padding</div>
+				<div class="padding-quick-controls">
+					<div class="form-group">
+						<label for="paddingAll">
+							All: <span class="value-display">{paddingAllValue}px</span>
+						</label>
+						<div class="slider-container">
+							<input
+								type="range"
+								id="paddingAll"
+								min="0"
+								max="64"
+								step="2"
+								value={paddingAllValue}
+								oninput={(e) => updatePaddingAll(Number(e.currentTarget.value))}
+								class="slider"
+							/>
+							<div class="slider-labels">
+								<span>0px</span>
+								<span>64px</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="paddingY">
+							Y (Top/Bottom): <span class="value-display">{paddingYValue}px</span>
+						</label>
+						<div class="slider-container">
+							<input
+								type="range"
+								id="paddingY"
+								min="0"
+								max="64"
+								step="2"
+								value={paddingYValue}
+								oninput={(e) => updatePaddingY(Number(e.currentTarget.value))}
+								class="slider"
+							/>
+							<div class="slider-labels">
+								<span>0px</span>
+								<span>64px</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="paddingX">
+							X (Left/Right): <span class="value-display">{paddingXValue}px</span>
+						</label>
+						<div class="slider-container">
+							<input
+								type="range"
+								id="paddingX"
+								min="0"
+								max="64"
+								step="2"
+								value={paddingXValue}
+								oninput={(e) => updatePaddingX(Number(e.currentTarget.value))}
+								class="slider"
+							/>
+							<div class="slider-labels">
+								<span>0px</span>
+								<span>64px</span>
+							</div>
 						</div>
 					</div>
 				</div>
+				<Accordion title="Advanced Padding Settings">
+					<div class="padding-controls">
+						<div class="form-group">
+							<label for="paddingTop">
+								Top: <span class="value-display">{paddingTopValue}px</span>
+							</label>
+							<div class="slider-container">
+								<input
+									type="range"
+									id="paddingTop"
+									min="0"
+									max="64"
+									step="2"
+									bind:value={paddingTopValue}
+									class="slider"
+								/>
+								<div class="slider-labels">
+									<span>0px</span>
+									<span>64px</span>
+								</div>
+							</div>
+						</div>
 
-				<div class="form-group">
-					<label for="height">Height</label>
-					<input type="text" id="height" bind:value={height} placeholder="auto" />
-				</div>
+						<div class="form-group">
+							<label for="paddingRight">
+								Right: <span class="value-display">{paddingRightValue}px</span>
+							</label>
+							<div class="slider-container">
+								<input
+									type="range"
+									id="paddingRight"
+									min="0"
+									max="64"
+									step="2"
+									bind:value={paddingRightValue}
+									class="slider"
+								/>
+								<div class="slider-labels">
+									<span>0px</span>
+									<span>64px</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="paddingBottom">
+								Bottom: <span class="value-display">{paddingBottomValue}px</span>
+							</label>
+							<div class="slider-container">
+								<input
+									type="range"
+									id="paddingBottom"
+									min="0"
+									max="64"
+									step="2"
+									bind:value={paddingBottomValue}
+									class="slider"
+								/>
+								<div class="slider-labels">
+									<span>0px</span>
+									<span>64px</span>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="paddingLeft">
+								Left: <span class="value-display">{paddingLeftValue}px</span>
+							</label>
+							<div class="slider-container">
+								<input
+									type="range"
+									id="paddingLeft"
+									min="0"
+									max="64"
+									step="2"
+									bind:value={paddingLeftValue}
+									class="slider"
+								/>
+								<div class="slider-labels">
+									<span>0px</span>
+									<span>64px</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Accordion>
 			</div>
 
 			<div class="form-row">
-				<div class="form-group">
-					<label for="padding">
-						Padding: <span class="value-display">{paddingValue}px</span>
-					</label>
-					<div class="slider-container">
-						<input
-							type="range"
-							id="padding"
-							min="0"
-							max="64"
-							step="2"
-							bind:value={paddingValue}
-							class="slider"
-						/>
-						<div class="slider-labels">
-							<span>0px</span>
-							<span>64px</span>
-						</div>
-					</div>
-				</div>
-
 				<div class="form-group">
 					<label for="borderRadius">
 						Border Radius: <span class="value-display">{borderRadiusValue}px</span>
@@ -257,25 +405,51 @@
 				{/if}
 			</div>
 
-			<div class="form-group">
-				<label for="textOrientation">Text Orientation</label>
-				<select id="textOrientation" bind:value={textOrientation}>
-					{#each textOrientations as orientation}
-						<option value={orientation.value}>{orientation.label}</option>
-					{/each}
-				</select>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="textOrientation">Text Orientation</label>
+					<select id="textOrientation" bind:value={textOrientation}>
+						{#each textOrientations as orientation}
+							<option value={orientation.value}>{orientation.label}</option>
+						{/each}
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label for="textAlign">Text Alignment</label>
+					<select id="textAlign" bind:value={textAlign}>
+						{#each textAlignments as alignment}
+							<option value={alignment.value}>{alignment.label}</option>
+						{/each}
+					</select>
+				</div>
 			</div>
 
-			<div class="form-group">
-				<label for="backgroundColor">Background Color</label>
-				<div class="color-input-group">
-					<input type="color" id="backgroundColor" bind:value={backgroundColor} />
-					<input
-						type="text"
-						bind:value={backgroundColor}
-						placeholder="#ffffff"
-						class="color-text-input"
-					/>
+			<div class="form-row">
+				<div class="form-group">
+					<label for="textColor">Text Color</label>
+					<div class="color-input-group">
+						<input type="color" id="textColor" bind:value={textColor} />
+						<input
+							type="text"
+							bind:value={textColor}
+							placeholder="#000000"
+							class="color-text-input"
+						/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="backgroundColor">Background Color</label>
+					<div class="color-input-group">
+						<input type="color" id="backgroundColor" bind:value={backgroundColor} />
+						<input
+							type="text"
+							bind:value={backgroundColor}
+							placeholder="#ffffff"
+							class="color-text-input"
+						/>
+					</div>
 				</div>
 			</div>
 		</form>
@@ -295,7 +469,7 @@
 	.preview-section {
 		background: white;
 		border-radius: 0 0 12px 12px;
-		padding: 1rem;
+		padding: 0.5rem;
 		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 		display: flex;
 		flex-direction: column;
@@ -306,18 +480,26 @@
 	}
 
 	.preview-title {
-		font-size: 1.25rem;
-		font-weight: 700;
-		margin-bottom: 1rem;
-		color: #1f2937;
+		font-size: 0.75rem;
+		font-weight: 300;
+		color: #ffffff;
+		background: #363636;
 		text-align: center;
+		position: absolute;
+		padding: 0.25rem;
+		border-radius: 0.5rem;
+		bottom: 0.5rem;
+		right: 0.5rem;
+		z-index: 10;
+		opacity: 1;
 	}
 
 	.preview-container {
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 1rem;
+		padding: 0.5rem;
 		background: #f9fafb;
 		border-radius: 8px;
 		min-height: 200px;
@@ -334,19 +516,6 @@
 		flex: 1;
 		overflow-y: auto;
 		margin-top: auto;
-	}
-
-	.form-title {
-		font-size: 1.25rem;
-		font-weight: 700;
-		margin-bottom: 1.5rem;
-		color: #1f2937;
-		text-align: center;
-		position: sticky;
-		top: 0;
-		background: white;
-		padding-bottom: 1rem;
-		z-index: 5;
 	}
 
 	.customization-form {
@@ -372,6 +541,46 @@
 		font-weight: 600;
 		color: #374151;
 		font-size: 0.875rem;
+	}
+
+	.padding-quick-controls {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1rem;
+		margin-bottom: 1rem;
+		padding: 1rem;
+		background: #eff6ff;
+		border-radius: 8px;
+		border: 1px solid #bfdbfe;
+	}
+
+	.padding-quick-controls .form-group {
+		margin: 0;
+	}
+
+	.padding-controls {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+		padding: 1rem;
+		background: #f9fafb;
+	}
+
+	.padding-controls .form-group {
+		margin: 0;
+	}
+
+	@media (max-width: 1023px) {
+		.padding-quick-controls {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.section-label {
+		font-weight: 600;
+		color: #374151;
+		font-size: 0.875rem;
+		margin-bottom: 0.5rem;
 	}
 
 	.form-group input[type='text'],
@@ -608,13 +817,6 @@
 			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 			margin-top: 0;
 			max-height: calc(100vh - 4rem);
-		}
-
-		.form-title {
-			font-size: 1.5rem;
-			text-align: left;
-			position: static;
-			padding-bottom: 0;
 		}
 	}
 
