@@ -1,4 +1,7 @@
 <script lang="ts">
+	import type { TextAlignment } from './textAlignmentSelector.svelte';
+	import type { TextOrientation } from './textOrientationSelector.svelte';
+
 	interface Props {
 		borderRadius?: string;
 		border?: string;
@@ -14,8 +17,8 @@
 		paddingBottom?: string;
 		paddingLeft?: string;
 		textSize?: string;
-		textOrientation?: string;
-		textAlign?: string;
+		textOrientation?: TextOrientation;
+		textAlign?: TextAlignment;
 		fontFamily?: string;
 		fontWeight?: string;
 		content?: string;
