@@ -4,6 +4,7 @@
 	import { Slider } from '$lib/components/ui/slider/index';
 	import PaddingSelector from './paddingSelector.svelte';
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
+	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
 
 	// Numerical values as numbers for sliders
 	let paddingTopValue = $state(16);
@@ -50,7 +51,7 @@
 	let paddingLeft = $derived(`${paddingLeftValue}px`);
 	let borderRadius = $derived(`${borderRadiusValue}px`);
 	let textSize = $derived(`${textSizeValue}px`);
-	let textOrientation = $state('horizontal-tb');
+	let textOrientation: TextOrientation = $state('horizontal-tb');
 	let textAlign: TextAlignment = $state('left');
 	let fontFamily = $state('system-ui, sans-serif');
 	let fontWeight = $state('400');
@@ -244,18 +245,18 @@
 			<div class="form-row">
 				<div class="form-group">
 					<label for="textOrientation">Text Orientation</label>
-					<select id="textOrientation" bind:value={textOrientation}>
-						{#each textOrientations as orientation (orientation)}
-							<option value={orientation.value}>{orientation.label}</option>
-						{/each}
-					</select>
+					<TextOrientationSelector
+						{textOrientation}
+						setTextOrientation={(textOrientation: TextOrientation) =>
+							(textOrientation = textOrientation)}
+					/>
 				</div>
 
 				<div class="form-group">
 					<label for="textAlign">Text Alignment</label>
 					<TextAlignmentSelector
 						{textAlign}
-						onTextAlignmentChange={(textAlign: TextAlignment) => (textAlign = textAlign)}
+						onTextAlignmentChange={(newValue: TextAlignment) => (textAlign = newValue)}
 					/>
 				</div>
 			</div>
