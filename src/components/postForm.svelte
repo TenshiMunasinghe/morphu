@@ -5,6 +5,7 @@
 	import PaddingSelector from './paddingSelector.svelte';
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
+	import Separator from '$lib/components/ui/separator/separator.svelte';
 
 	// Numerical values as numbers for sliders
 	let paddingTopValue = $state(16);
@@ -73,19 +74,6 @@
 		{ value: 'Comic Sans MS, cursive', label: 'Comic Sans MS', font: 'Comic Sans MS, cursive' }
 	];
 
-	const textOrientations = [
-		{ value: 'horizontal-tb', label: 'Horizontal' },
-		{ value: 'vertical-rl', label: 'Vertical (Right to Left)' },
-		{ value: 'vertical-lr', label: 'Vertical (Left to Right)' }
-	];
-
-	const textAlignments = [
-		{ value: 'left', label: 'Left' },
-		{ value: 'center', label: 'Center' },
-		{ value: 'right', label: 'Right' },
-		{ value: 'justify', label: 'Justify' }
-	];
-
 	function toggleFontSelect() {
 		isFontSelectOpen = !isFontSelectOpen;
 	}
@@ -141,13 +129,39 @@
 	<div class="form-section">
 		<form class="customization-form">
 			<div class="form-group">
-				<label for="content">Post Content</label>
 				<textarea
+					class="resize-none overflow-y-scroll border-none outline-none"
 					id="content"
 					bind:value={content}
 					rows="4"
 					placeholder="Enter your post content..."
 				></textarea>
+			</div>
+
+			<Separator class="my-2" />
+
+			<h2 class="mb-2 text-center text-lg font-bold">Style your Post!</h2>
+
+			<div class="grid grid-cols-2 gap-8 text-sm">
+				<div class="flex items-center justify-between gap-2">
+					<label for="textColor">Text</label>
+					<input
+						type="color"
+						id="textColor"
+						bind:value={textColor}
+						class="h-9 w-9 rounded-full outline-2 outline-neutral-700"
+					/>
+				</div>
+
+				<div class="flex items-center justify-between gap-2">
+					<label for="backgroundColor">Background</label>
+					<input
+						type="color"
+						id="backgroundColor"
+						bind:value={backgroundColor}
+						class="h-9 w-9 rounded-full outline-2 outline-neutral-700"
+					/>
+				</div>
 			</div>
 
 			<div class="form-group">
@@ -183,17 +197,29 @@
 
 				<div class="form-group">
 					<label for="fontWeight">Font Weight</label>
-					<select id="fontWeight" bind:value={fontWeight}>
-						<option value="100">100 (Thin)</option>
-						<option value="200">200 (Extra Light)</option>
-						<option value="300">300 (Light)</option>
-						<option value="400">400 (Normal)</option>
-						<option value="500">500 (Medium)</option>
-						<option value="600">600 (Semi Bold)</option>
-						<option value="700">700 (Bold)</option>
-						<option value="800">800 (Extra Bold)</option>
-						<option value="900">900 (Black)</option>
-					</select>
+					<div class="font-weight-buttons">
+						<Button
+							type="button"
+							class="font-weight-btn {fontWeight === '300' ? 'active' : ''}"
+							onclick={() => (fontWeight = '300')}
+						>
+							Light
+						</Button>
+						<Button
+							type="button"
+							class="font-weight-btn {fontWeight === '400' ? 'active' : ''}"
+							onclick={() => (fontWeight = '400')}
+						>
+							Normal
+						</Button>
+						<Button
+							type="button"
+							class="font-weight-btn {fontWeight === '700' ? 'active' : ''}"
+							onclick={() => (fontWeight = '700')}
+						>
+							Bold
+						</Button>
+					</div>
 				</div>
 			</div>
 
@@ -257,34 +283,6 @@
 						{textAlign}
 						onTextAlignmentChange={(newValue: TextAlignment) => (textAlign = newValue)}
 					/>
-				</div>
-			</div>
-
-			<div class="form-row">
-				<div class="form-group">
-					<label for="textColor">Text Color</label>
-					<div class="color-input-group">
-						<input type="color" id="textColor" bind:value={textColor} />
-						<input
-							type="text"
-							bind:value={textColor}
-							placeholder="#000000"
-							class="color-text-input"
-						/>
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label for="backgroundColor">Background Color</label>
-					<div class="color-input-group">
-						<input type="color" id="backgroundColor" bind:value={backgroundColor} />
-						<input
-							type="text"
-							bind:value={backgroundColor}
-							placeholder="#ffffff"
-							class="color-text-input"
-						/>
-					</div>
 				</div>
 			</div>
 		</form>
@@ -419,7 +417,6 @@
 	}
 
 	.form-group input[type='text'],
-	.form-group textarea,
 	.form-group select {
 		padding: 0.75rem;
 		border: 1px solid #d1d5db;
@@ -433,16 +430,10 @@
 	}
 
 	.form-group input[type='text']:focus,
-	.form-group textarea:focus,
 	.form-group select:focus {
 		outline: none;
 		border-color: #3b82f6;
 		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-	}
-
-	.form-group textarea {
-		resize: vertical;
-		min-height: 80px;
 	}
 
 	.color-input-group {
@@ -556,6 +547,37 @@
 	.font-select-item.active {
 		background: #eff6ff;
 		color: #1e40af;
+	}
+
+	/* Font Weight Buttons */
+	.font-weight-buttons {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.font-weight-btn {
+		flex: 1;
+		padding: 0.5rem 1rem;
+		border: 1px solid #d1d5db;
+		border-radius: 6px;
+		background: white;
+		font-size: 0.875rem;
+		cursor: pointer;
+		transition:
+			background-color 0.2s,
+			border-color 0.2s,
+			color 0.2s;
+	}
+
+	.font-weight-btn:hover {
+		background: #f3f4f6;
+		border-color: #9ca3af;
+	}
+
+	.font-weight-btn.active {
+		background: #3b82f6;
+		color: white;
+		border-color: #3b82f6;
 	}
 
 	/* Desktop Layout */
