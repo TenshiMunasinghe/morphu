@@ -242,13 +242,12 @@
 				{/if}
 			</div>
 
-			<div class="form-row">
+			<div class="form-row grid grid-cols-2 gap-2">
 				<div class="form-group">
 					<label for="textOrientation">Text Orientation</label>
 					<TextOrientationSelector
 						{textOrientation}
-						setTextOrientation={(textOrientation: TextOrientation) =>
-							(textOrientation = textOrientation)}
+						setTextOrientation={(newValue: TextOrientation) => (textOrientation = newValue)}
 					/>
 				</div>
 
@@ -599,10 +598,6 @@
 
 	/* Mobile optimizations */
 	@media (max-width: 1023px) {
-		.form-row {
-			grid-template-columns: 1fr;
-		}
-
 		.preview-container {
 			min-height: 150px;
 		}
