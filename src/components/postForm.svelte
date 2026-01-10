@@ -3,6 +3,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Slider } from '$lib/components/ui/slider/index';
 	import PaddingSelector from './paddingSelector.svelte';
+	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 
 	// Numerical values as numbers for sliders
 	let paddingTopValue = $state(16);
@@ -50,7 +51,7 @@
 	let borderRadius = $derived(`${borderRadiusValue}px`);
 	let textSize = $derived(`${textSizeValue}px`);
 	let textOrientation = $state('horizontal-tb');
-	let textAlign = $state('left');
+	let textAlign: TextAlignment = $state('left');
 	let fontFamily = $state('system-ui, sans-serif');
 	let fontWeight = $state('400');
 	let content = $state(
@@ -252,11 +253,10 @@
 
 				<div class="form-group">
 					<label for="textAlign">Text Alignment</label>
-					<select id="textAlign" bind:value={textAlign}>
-						{#each textAlignments as alignment (alignment)}
-							<option value={alignment.value}>{alignment.label}</option>
-						{/each}
-					</select>
+					<TextAlignmentSelector
+						{textAlign}
+						onTextAlignmentChange={(textAlign: TextAlignment) => (textAlign = textAlign)}
+					/>
 				</div>
 			</div>
 
