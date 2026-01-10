@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Post from './post.svelte';
-	import Accordion from './accordion.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import { Slider } from '$lib/components/ui/slider/index';
+	import PaddingSelector from './paddingSelector.svelte';
 
 	// Numerical values as numbers for sliders
 	let paddingTopValue = $state(16);
@@ -10,25 +12,30 @@
 	let borderRadiusValue = $state(8);
 	let textSizeValue = $state(16);
 
-	// Computed values for Y, X, and All sliders (using average)
-	let paddingYValue = $derived(Math.round((paddingTopValue + paddingBottomValue) / 2));
-	let paddingXValue = $derived(Math.round((paddingLeftValue + paddingRightValue) / 2));
-	let paddingAllValue = $derived(
-		Math.round((paddingTopValue + paddingRightValue + paddingBottomValue + paddingLeftValue) / 4)
-	);
+	function updateIndividual(axis: 'top' | 'right' | 'bottom' | 'left', value: number) {
+		if (axis === 'top') {
+			paddingTopValue = value;
+		} else if (axis === 'right') {
+			paddingRightValue = value;
+		} else if (axis === 'bottom') {
+			paddingBottomValue = value;
+		} else if (axis === 'left') {
+			paddingLeftValue = value;
+		}
+	}
 
 	// Functions to update padding values
-	function updatePaddingY(value: number) {
-		paddingTopValue = value;
-		paddingBottomValue = value;
+	function updateAxis(axis: 'x' | 'y', value: number) {
+		if (axis === 'x') {
+			paddingLeftValue = value;
+			paddingRightValue = value;
+		} else {
+			paddingTopValue = value;
+			paddingBottomValue = value;
+		}
 	}
 
-	function updatePaddingX(value: number) {
-		paddingLeftValue = value;
-		paddingRightValue = value;
-	}
-
-	function updatePaddingAll(value: number) {
+	function updateAll(value: number) {
 		paddingTopValue = value;
 		paddingRightValue = value;
 		paddingBottomValue = value;
@@ -142,207 +149,35 @@
 			</div>
 
 			<div class="form-group">
-				<div class="section-label">Padding</div>
-				<div class="padding-quick-controls">
-					<div class="form-group">
-						<label for="paddingAll">
-							All: <span class="value-display">{paddingAllValue}px</span>
-						</label>
-						<div class="slider-container">
-							<input
-								type="range"
-								id="paddingAll"
-								min="0"
-								max="64"
-								step="2"
-								value={paddingAllValue}
-								oninput={(e) => updatePaddingAll(Number(e.currentTarget.value))}
-								class="slider"
-							/>
-							<div class="slider-labels">
-								<span>0px</span>
-								<span>64px</span>
-							</div>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="paddingY">
-							Y (Top/Bottom): <span class="value-display">{paddingYValue}px</span>
-						</label>
-						<div class="slider-container">
-							<input
-								type="range"
-								id="paddingY"
-								min="0"
-								max="64"
-								step="2"
-								value={paddingYValue}
-								oninput={(e) => updatePaddingY(Number(e.currentTarget.value))}
-								class="slider"
-							/>
-							<div class="slider-labels">
-								<span>0px</span>
-								<span>64px</span>
-							</div>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label for="paddingX">
-							X (Left/Right): <span class="value-display">{paddingXValue}px</span>
-						</label>
-						<div class="slider-container">
-							<input
-								type="range"
-								id="paddingX"
-								min="0"
-								max="64"
-								step="2"
-								value={paddingXValue}
-								oninput={(e) => updatePaddingX(Number(e.currentTarget.value))}
-								class="slider"
-							/>
-							<div class="slider-labels">
-								<span>0px</span>
-								<span>64px</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<Accordion title="Advanced Padding Settings">
-					<div class="padding-controls">
-						<div class="form-group">
-							<label for="paddingTop">
-								Top: <span class="value-display">{paddingTopValue}px</span>
-							</label>
-							<div class="slider-container">
-								<input
-									type="range"
-									id="paddingTop"
-									min="0"
-									max="64"
-									step="2"
-									bind:value={paddingTopValue}
-									class="slider"
-								/>
-								<div class="slider-labels">
-									<span>0px</span>
-									<span>64px</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="paddingRight">
-								Right: <span class="value-display">{paddingRightValue}px</span>
-							</label>
-							<div class="slider-container">
-								<input
-									type="range"
-									id="paddingRight"
-									min="0"
-									max="64"
-									step="2"
-									bind:value={paddingRightValue}
-									class="slider"
-								/>
-								<div class="slider-labels">
-									<span>0px</span>
-									<span>64px</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="paddingBottom">
-								Bottom: <span class="value-display">{paddingBottomValue}px</span>
-							</label>
-							<div class="slider-container">
-								<input
-									type="range"
-									id="paddingBottom"
-									min="0"
-									max="64"
-									step="2"
-									bind:value={paddingBottomValue}
-									class="slider"
-								/>
-								<div class="slider-labels">
-									<span>0px</span>
-									<span>64px</span>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="paddingLeft">
-								Left: <span class="value-display">{paddingLeftValue}px</span>
-							</label>
-							<div class="slider-container">
-								<input
-									type="range"
-									id="paddingLeft"
-									min="0"
-									max="64"
-									step="2"
-									bind:value={paddingLeftValue}
-									class="slider"
-								/>
-								<div class="slider-labels">
-									<span>0px</span>
-									<span>64px</span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</Accordion>
+				<div>Padding</div>
+				<PaddingSelector
+					{updateAll}
+					{updateAxis}
+					{updateIndividual}
+					padding={{
+						top: paddingTopValue,
+						right: paddingRightValue,
+						bottom: paddingBottomValue,
+						left: paddingLeftValue
+					}}
+				/>
 			</div>
 
 			<div class="form-row">
-				<div class="form-group">
-					<label for="borderRadius">
-						Border Radius: <span class="value-display">{borderRadiusValue}px</span>
-					</label>
-					<div class="slider-container">
-						<input
-							type="range"
-							id="borderRadius"
-							min="0"
-							max="50"
-							step="2"
-							bind:value={borderRadiusValue}
-							class="slider"
-						/>
-						<div class="slider-labels">
-							<span>0px</span>
-							<span>50px</span>
-						</div>
-					</div>
-				</div>
+				<label for="borderRadius">Border Radius</label>
+				<Slider
+					id="borderRadius"
+					type="single"
+					bind:value={borderRadiusValue}
+					min={0}
+					max={50}
+					step={2}
+				/>
 			</div>
 
 			<div class="form-row">
-				<div class="form-group">
-					<label for="textSize">
-						Text Size: <span class="value-display">{textSizeValue}px</span>
-					</label>
-					<div class="slider-container">
-						<input
-							type="range"
-							id="textSize"
-							min="8"
-							max="48"
-							step="2"
-							bind:value={textSizeValue}
-							class="slider"
-						/>
-						<div class="slider-labels">
-							<span>8px</span>
-							<span>48px</span>
-						</div>
-					</div>
-				</div>
+				<label for="textSize">Text Size</label>
+				<Slider id="textSize" type="single" bind:value={textSizeValue} min={8} max={48} step={2} />
 
 				<div class="form-group">
 					<label for="fontWeight">Font Weight</label>
@@ -362,7 +197,7 @@
 
 			<div class="form-group font-select-container">
 				<label for="fontFamily">Font Family</label>
-				<button
+				<Button
 					type="button"
 					class="font-select-trigger"
 					onclick={toggleFontSelect}
@@ -387,10 +222,10 @@
 							clip-rule="evenodd"
 						></path>
 					</svg>
-				</button>
+				</Button>
 				{#if isFontSelectOpen}
 					<div class="font-select-content">
-						{#each fontFamilies as font}
+						{#each fontFamilies as font (font.value)}
 							<button
 								type="button"
 								class="font-select-item"
@@ -409,7 +244,7 @@
 				<div class="form-group">
 					<label for="textOrientation">Text Orientation</label>
 					<select id="textOrientation" bind:value={textOrientation}>
-						{#each textOrientations as orientation}
+						{#each textOrientations as orientation (orientation)}
 							<option value={orientation.value}>{orientation.label}</option>
 						{/each}
 					</select>
@@ -418,7 +253,7 @@
 				<div class="form-group">
 					<label for="textAlign">Text Alignment</label>
 					<select id="textAlign" bind:value={textAlign}>
-						{#each textAlignments as alignment}
+						{#each textAlignments as alignment (alignment)}
 							<option value={alignment.value}>{alignment.label}</option>
 						{/each}
 					</select>
@@ -627,65 +462,6 @@
 
 	.color-text-input {
 		flex: 1;
-	}
-
-	/* Slider Styles */
-	.slider-container {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.slider {
-		width: 100%;
-		height: 6px;
-		border-radius: 3px;
-		background: #e5e7eb;
-		outline: none;
-		-webkit-appearance: none;
-		appearance: none;
-		cursor: pointer;
-	}
-
-	.slider::-webkit-slider-thumb {
-		-webkit-appearance: none;
-		appearance: none;
-		width: 18px;
-		height: 18px;
-		border-radius: 50%;
-		background: #3b82f6;
-		cursor: pointer;
-		transition: background 0.2s;
-	}
-
-	.slider::-webkit-slider-thumb:hover {
-		background: #2563eb;
-	}
-
-	.slider::-moz-range-thumb {
-		width: 18px;
-		height: 18px;
-		border-radius: 50%;
-		background: #3b82f6;
-		cursor: pointer;
-		border: none;
-		transition: background 0.2s;
-	}
-
-	.slider::-moz-range-thumb:hover {
-		background: #2563eb;
-	}
-
-	.slider-labels {
-		display: flex;
-		justify-content: space-between;
-		font-size: 0.75rem;
-		color: #6b7280;
-	}
-
-	.value-display {
-		font-weight: 600;
-		color: #3b82f6;
 	}
 
 	/* Shadcn-style Select */
