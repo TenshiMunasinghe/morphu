@@ -6,9 +6,32 @@
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
-	import { ChevronDown } from 'lucide-svelte';
-	import * as Resizable from '$lib/components/ui/resizable';
-	import { PaneResizer } from 'paneforge';
+	import { ChevronDown, GripHorizontal } from 'lucide-svelte';
+
+	// Preview resize state (vertical only)
+	let previewHeight = $state(200);
+	let isResizing = $state(false);
+
+	function startResize(e: MouseEvent) {
+		e.preventDefault();
+		isResizing = true;
+
+		const startY = e.clientY;
+		const startHeight = previewHeight;
+
+		function onMouseMove(e: MouseEvent) {
+			previewHeight = Math.max(100, Math.min(500, startHeight + (e.clientY - startY)));
+		}
+
+		function onMouseUp() {
+			isResizing = false;
+			document.removeEventListener('mousemove', onMouseMove);
+			document.removeEventListener('mouseup', onMouseUp);
+		}
+
+		document.addEventListener('mousemove', onMouseMove);
+		document.addEventListener('mouseup', onMouseUp);
+	}
 
 	// Numerical values as numbers for sliders
 	let paddingTopValue = $state(16);
@@ -105,46 +128,47 @@
 	);
 </script>
 
-<Resizable.PaneGroup
-	direction="vertical"
-	class="h-screen bg-background lg:mx-auto lg:max-w-350 lg:p-8"
->
-	<!-- Preview Section - Fixed at top on mobile -->
-	<Resizable.Pane
-		defaultSize={25}
-		minSize={10}
-		class="relative z-10 flex w-full flex-col overflow-y-auto rounded-base border-b-0 border-border bg-secondary-background p-8 shadow-none"
+<div class="min-h-screen bg-background">
+	<!-- Preview Section - Sticky at top, full width, vertically resizable -->
+	<div
+		class="sticky top-0 z-50 w-full border-b-4 border-border bg-secondary-background"
+		style:height="{previewHeight}px"
 	>
 		<h2
-			class="absolute right-1 bottom-1 z-10 rounded-base border-2 border-border bg-foreground p-1 text-center text-xs font-base text-secondary-background lg:text-left lg:text-2xl"
+			class="absolute top-2 left-2 z-10 rounded-base border-2 border-border bg-foreground px-2 py-1 text-xs font-base text-secondary-background"
 		>
 			Preview
 		</h2>
-		<Post
-			{borderRadius}
-			{paddingTop}
-			{paddingRight}
-			{paddingBottom}
-			{paddingLeft}
-			{textSize}
-			{textOrientation}
-			{textAlign}
-			{fontFamily}
-			{fontWeight}
-			{content}
-			{backgroundColor}
-			{textColor}
-		/>
-	</Resizable.Pane>
+		<div class="flex h-full items-center justify-center overflow-auto p-4">
+			<Post
+				{borderRadius}
+				{paddingTop}
+				{paddingRight}
+				{paddingBottom}
+				{paddingLeft}
+				{textSize}
+				{textOrientation}
+				{textAlign}
+				{fontFamily}
+				{fontWeight}
+				{content}
+				{backgroundColor}
+				{textColor}
+			/>
+		</div>
+		<!-- Resize handle (bottom edge) -->
+		<button
+			type="button"
+			class="absolute bottom-0 left-1/2 z-10 flex h-4 w-8 -translate-x-1/2 translate-y-1/2 cursor-ns-resize items-center justify-center rounded-sm border-2 border-border bg-primary"
+			onmousedown={startResize}
+			aria-label="Resize preview vertically"
+		>
+			<GripHorizontal class="size-3 text-primary-foreground" />
+		</button>
+	</div>
 
-	<Resizable.Handle withHandle />
-
-	<!-- Form Section - At bottom on mobile -->
-	<Resizable.Pane
-		defaultSize={75}
-		minSize={20}
-		class="overflow-y-auto bg-secondary-background p-6 shadow-shadow lg:p-8"
-	>
+	<!-- Form Section - Below preview, scrollable -->
+	<div class="mx-auto max-w-2xl bg-secondary-background p-6 lg:p-8">
 		<form class="flex flex-col gap-8 pb-8">
 			<div class="flex flex-col gap-2">
 				<textarea
@@ -300,5 +324,5 @@
 				</div>
 			</div>
 		</form>
-	</Resizable.Pane>
-</Resizable.PaneGroup>
+	</div>
+</div>
