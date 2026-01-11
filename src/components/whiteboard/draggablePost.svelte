@@ -35,7 +35,6 @@
 	}
 
 	function handleDragEnd(e: { offsetX: number; offsetY: number }) {
-		position = { x: e.offsetX, y: e.offsetY };
 		onPositionChange?.(post.id, e.offsetX, e.offsetY);
 	}
 
@@ -53,6 +52,7 @@
 	role="article"
 	use:draggable={{
 		position,
+		bounds: 'parent',
 		onDragStart: handleDragStart,
 		onDragEnd: handleDragEnd
 	}}

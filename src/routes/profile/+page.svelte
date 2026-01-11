@@ -6,10 +6,11 @@
 	import { getPosts, getWhiteboardState, saveWhiteboardState, deletePost } from '$lib/stores/posts';
 	import dummyData from '$lib/data/dummyPosts.json';
 
-	// Combine dummy posts with user-created posts from localStorage
-	let allPosts = $state<PostData[]>([]);
-	let whiteboardState = $state<WhiteboardState>({ placements: [] });
+	// Initialize with dummy data (available at SSR time)
+	let allPosts = $state<PostData[]>(dummyData.posts as PostData[]);
+	let whiteboardState = $state<WhiteboardState>(dummyData.whiteboard as WhiteboardState);
 	let profile = $state<UserProfile>(dummyData.profile as UserProfile);
+	let isReady = $state(false);
 
 	// Track which posts are demo posts (cannot be deleted)
 	const demoPostIds = new Set((dummyData.posts as PostData[]).map((p) => p.id));
@@ -34,9 +35,10 @@
 			whiteboardState = {
 				placements: [...savedState.placements, ...missingDummyPlacements]
 			};
-		} else {
-			whiteboardState = dummyState;
 		}
+		// If no saved state, keep the dummy state (already initialized)
+
+		isReady = true;
 	});
 
 	function handleStateChange(state: WhiteboardState) {
@@ -56,13 +58,19 @@
 	<title>Profile | Morphu</title>
 </svelte:head>
 
-<div class="h-screen w-screen overflow-auto">
-	<Whiteboard
-		posts={allPosts}
-		{demoPostIds}
-		initialState={whiteboardState}
-		{profile}
-		onStateChange={handleStateChange}
-		onDeletePost={handleDeletePost}
-	/>
-</div>
+{#if isReady}
+	<div class="h-screen w-screen overflow-auto">
+		<Whiteboard
+			posts={allPosts}
+			{demoPostIds}
+			initialState={whiteboardState}
+			{profile}
+			onStateChange={handleStateChange}
+			onDeletePost={handleDeletePost}
+		/>
+	</div>
+{:else}
+	<div class="flex h-screen w-screen items-center justify-center bg-background">
+		<p class="text-foreground">Loading...</p>
+	</div>
+{/if}

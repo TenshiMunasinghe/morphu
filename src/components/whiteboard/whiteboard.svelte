@@ -1,10 +1,11 @@
 <script lang="ts">
 	import DraggablePost from './draggablePost.svelte';
 	import ProfileIcon from './profileIcon.svelte';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import { ZoomIn, ZoomOut, Maximize } from 'lucide-svelte';
 	import type { PostData } from '$lib/types/post';
 	import type { WhiteboardState, UserProfile, PostPlacement } from '$lib/types/whiteboard';
+	import { SvelteMap } from 'svelte/reactivity';
+
+	const CANVAS_SIZE = 2026;
 
 	interface Props {
 		posts: PostData[];
@@ -24,109 +25,40 @@
 		onDeletePost
 	}: Props = $props();
 
-	// Internal state for placements (mutable)
-	let localPlacements = $state<PostPlacement[]>([]);
+	// Use initialState placements directly, with local mutations tracked separately
+	let localPlacementOverrides = $state<Map<string, PostPlacement>>(new Map());
 	let localMaxZIndex = $state(1);
 
-	// Zoom state
-	let zoom = $state(1);
-	const ZOOM_STEP = 0.1;
-	const MAX_ZOOM = 2;
+	// Combine initial placements with local overrides
+	let localPlacements = $derived.by(() => {
+		const basePlacements = initialState?.placements || [];
+		const result: PostPlacement[] = [];
 
-	// Sync with initialState when it changes
+		// Start with initial placements, applying any overrides
+		for (const placement of basePlacements) {
+			const override = localPlacementOverrides.get(placement.postId);
+			result.push(override || placement);
+		}
+
+		// Add any new placements not in initialState
+		for (const [postId, placement] of localPlacementOverrides) {
+			if (!basePlacements.find((p) => p.postId === postId)) {
+				result.push(placement);
+			}
+		}
+
+		return result;
+	});
+
+	// Update maxZIndex when initialState changes
 	$effect(() => {
-		if (initialState?.placements) {
-			localPlacements = [...initialState.placements];
-			localMaxZIndex = Math.max(1, ...initialState.placements.map((p) => p.zIndex || 1));
+		if (initialState?.placements && initialState.placements.length > 0) {
+			const maxFromInitial = Math.max(...initialState.placements.map((p) => p.zIndex || 1));
+			if (maxFromInitial > localMaxZIndex) {
+				localMaxZIndex = maxFromInitial;
+			}
 		}
 	});
-
-	// Calculate content bounds (actual extent of posts)
-	let contentBounds = $derived.by(() => {
-		const POST_SIZE = 400; // Approximate max post size
-		const PADDING = 100; // Extra space around posts
-
-		if (localPlacements.length === 0) {
-			return { minX: 0, minY: 0, maxX: 800, maxY: 600, width: 800, height: 600 };
-		}
-
-		let minX = Infinity;
-		let minY = Infinity;
-		let maxX = -Infinity;
-		let maxY = -Infinity;
-
-		for (const placement of localPlacements) {
-			minX = Math.min(minX, placement.x);
-			minY = Math.min(minY, placement.y);
-			maxX = Math.max(maxX, placement.x + POST_SIZE);
-			maxY = Math.max(maxY, placement.y + POST_SIZE);
-		}
-
-		// Add padding
-		minX -= PADDING;
-		minY -= PADDING;
-		maxX += PADDING;
-		maxY += PADDING;
-
-		return {
-			minX,
-			minY,
-			maxX,
-			maxY,
-			width: maxX - minX,
-			height: maxY - minY
-		};
-	});
-
-	// Calculate minimum zoom to fit all posts in viewport
-	let minZoom = $derived.by(() => {
-		const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
-		const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
-
-		const scaleX = viewportWidth / contentBounds.width;
-		const scaleY = viewportHeight / contentBounds.height;
-
-		// Use the smaller scale to fit everything, but cap at 1 (no zoom in beyond 100%)
-		return Math.min(1, scaleX, scaleY);
-	});
-
-	// Calculate canvas bounds based on post positions and zoom
-	let canvasBounds = $derived.by(() => {
-		const MIN_WIDTH = typeof window !== 'undefined' ? window.innerWidth : 1200;
-		const MIN_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 800;
-
-		// Offset to shift everything into positive space
-		const offsetX = contentBounds.minX < 0 ? -contentBounds.minX : 0;
-		const offsetY = contentBounds.minY < 0 ? -contentBounds.minY : 0;
-
-		// Scale content size by zoom
-		const scaledWidth = contentBounds.width * zoom;
-		const scaledHeight = contentBounds.height * zoom;
-
-		return {
-			width: Math.max(MIN_WIDTH, scaledWidth),
-			height: Math.max(MIN_HEIGHT, scaledHeight),
-			offsetX,
-			offsetY
-		};
-	});
-
-	// Zoom controls
-	function zoomIn() {
-		zoom = Math.min(MAX_ZOOM, zoom + ZOOM_STEP);
-	}
-
-	function zoomOut() {
-		zoom = Math.max(minZoom, zoom - ZOOM_STEP);
-	}
-
-	function zoomToFit() {
-		zoom = minZoom;
-	}
-
-	function resetZoom() {
-		zoom = 1;
-	}
 
 	// Get position for a post, with fallback to default grid position
 	function getPlacement(postId: string, index: number): PostPlacement {
@@ -146,127 +78,72 @@
 	}
 
 	function handlePositionChange(postId: string, x: number, y: number) {
-		const existingIndex = localPlacements.findIndex((p) => p.postId === postId);
+		// Clamp position to canvas bounds
+		const clampedX = Math.max(0, Math.min(CANVAS_SIZE - 50, x));
+		const clampedY = Math.max(0, Math.min(CANVAS_SIZE - 50, y));
+
+		const existing = localPlacements.find((p) => p.postId === postId);
 		const placement: PostPlacement = {
 			postId,
-			x,
-			y,
-			zIndex: localPlacements[existingIndex]?.zIndex || localMaxZIndex
+			x: clampedX,
+			y: clampedY,
+			zIndex: existing?.zIndex || localMaxZIndex
 		};
 
-		if (existingIndex >= 0) {
-			localPlacements[existingIndex] = placement;
-		} else {
-			localPlacements.push(placement);
-		}
+		localPlacementOverrides.set(postId, placement);
+		localPlacementOverrides = new SvelteMap(localPlacementOverrides); // Trigger reactivity
 
-		// Trigger reactivity
-		localPlacements = [...localPlacements];
 		onStateChange?.({ placements: localPlacements });
 	}
 
 	function handleDragStart(postId: string) {
 		// Bring post to front
 		localMaxZIndex += 1;
-		const index = localPlacements.findIndex((p) => p.postId === postId);
-		if (index >= 0) {
-			localPlacements[index] = { ...localPlacements[index], zIndex: localMaxZIndex };
-			localPlacements = [...localPlacements];
+		const existing = localPlacements.find((p) => p.postId === postId);
+		if (existing) {
+			const updated = { ...existing, zIndex: localMaxZIndex };
+			localPlacementOverrides.set(postId, updated);
+			localPlacementOverrides = new SvelteMap(localPlacementOverrides); // Trigger reactivity
 		}
 	}
 
 	function handleDelete(postId: string) {
-		// Remove placement
-		localPlacements = localPlacements.filter((p) => p.postId !== postId);
-		onStateChange?.({ placements: localPlacements });
+		// Remove from overrides
+		localPlacementOverrides.delete(postId);
+		localPlacementOverrides = new SvelteMap(localPlacementOverrides); // Trigger reactivity
+
+		// Notify parent to remove from state and storage
+		const remainingPlacements = localPlacements.filter((p) => p.postId !== postId);
+		onStateChange?.({ placements: remainingPlacements });
 		onDeletePost?.(postId);
 	}
 </script>
 
-<!-- Zoom Controls -->
-<div class="fixed bottom-4 right-4 z-[10000] flex flex-col gap-2">
-	<Button
-		type="button"
-		variant="outline"
-		size="icon"
-		onclick={zoomIn}
-		disabled={zoom >= MAX_ZOOM}
-		aria-label="Zoom in"
-		class="bg-secondary-background"
-	>
-		<ZoomIn class="size-4" />
-	</Button>
-	<Button
-		type="button"
-		variant="outline"
-		size="icon"
-		onclick={zoomOut}
-		disabled={zoom <= minZoom}
-		aria-label="Zoom out"
-		class="bg-secondary-background"
-	>
-		<ZoomOut class="size-4" />
-	</Button>
-	<Button
-		type="button"
-		variant="outline"
-		size="icon"
-		onclick={zoomToFit}
-		aria-label="Fit all posts in view"
-		class="bg-secondary-background"
-	>
-		<Maximize class="size-4" />
-	</Button>
-	<div
-		class="rounded-base border-2 border-border bg-secondary-background px-2 py-1 text-center text-xs font-bold"
-	>
-		{Math.round(zoom * 100)}%
-	</div>
-</div>
-
 <div
-	class="whiteboard relative min-h-screen min-w-full bg-background"
-	style:width="{canvasBounds.width}px"
-	style:height="{canvasBounds.height}px"
+	class="whiteboard relative bg-background"
+	style:width="{CANVAS_SIZE}px"
+	style:height="{CANVAS_SIZE}px"
 >
-	<div
-		class="canvas-content origin-top-left"
-		style:transform="scale({zoom})"
-	>
-		<ProfileIcon {profile} x={20 + canvasBounds.offsetX} y={20 + canvasBounds.offsetY} />
+	<ProfileIcon {profile} x={20} y={20} />
 
-		{#each posts as post, index (post.id)}
-			{@const placement = getPlacement(post.id, index)}
-			<DraggablePost
-				{post}
-				x={placement.x + canvasBounds.offsetX}
-				y={placement.y + canvasBounds.offsetY}
-				zIndex={placement.zIndex}
-				isDemoPost={demoPostIds.has(post.id)}
-				onPositionChange={(postId, x, y) =>
-					handlePositionChange(
-						postId,
-						(x - canvasBounds.offsetX) / zoom,
-						(y - canvasBounds.offsetY) / zoom
-					)}
-				onDragStart={handleDragStart}
-				onDelete={handleDelete}
-			/>
-		{/each}
-	</div>
+	{#each posts as post, index (post.id)}
+		{@const placement = getPlacement(post.id, index)}
+		<DraggablePost
+			{post}
+			x={placement.x}
+			y={placement.y}
+			zIndex={placement.zIndex}
+			isDemoPost={demoPostIds.has(post.id)}
+			onPositionChange={handlePositionChange}
+			onDragStart={handleDragStart}
+			onDelete={handleDelete}
+		/>
+	{/each}
 </div>
 
 <style>
 	.whiteboard {
 		background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
 		background-size: 24px 24px;
-	}
-
-	.canvas-content {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
 	}
 </style>
