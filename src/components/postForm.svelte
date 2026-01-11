@@ -191,7 +191,7 @@
 
 			<div class="grid grid-cols-2 gap-8 text-sm">
 				<div class="flex items-center justify-between gap-2">
-					<label for="textColor" class="font-base">Text</label>
+					<label for="textColor" class="font-bold">Text</label>
 					<input
 						type="color"
 						id="textColor"
@@ -201,7 +201,7 @@
 				</div>
 
 				<div class="flex items-center justify-between gap-2">
-					<label for="backgroundColor" class="font-base">Background</label>
+					<label for="backgroundColor" class="font-bold">Background</label>
 					<input
 						type="color"
 						id="backgroundColor"
@@ -239,7 +239,7 @@
 					<Button
 						type="button"
 						variant={fontWeight === '300' ? 'default' : 'outline'}
-						class="flex-1"
+						class="flex-1 font-light"
 						onclick={() => (fontWeight = '300')}
 					>
 						Light
@@ -247,7 +247,7 @@
 					<Button
 						type="button"
 						variant={fontWeight === '400' ? 'default' : 'outline'}
-						class="flex-1"
+						class="flex-1 font-normal"
 						onclick={() => (fontWeight = '400')}
 					>
 						Normal
@@ -255,7 +255,7 @@
 					<Button
 						type="button"
 						variant={fontWeight === '700' ? 'default' : 'outline'}
-						class="flex-1"
+						class="flex-1 font-bold"
 						onclick={() => (fontWeight = '700')}
 					>
 						Bold
@@ -280,12 +280,12 @@
 				</Button>
 				{#if isFontSelectOpen}
 					<div
-						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-75 flex-col overflow-y-auto rounded-base border-2 border-border bg-secondary-background shadow-shadow"
+						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-75 flex-col overflow-y-auto rounded-base border-3 border-border bg-secondary-background shadow-shadow"
 					>
 						{#each fontFamilies as font (font.value)}
 							<button
 								type="button"
-								class="cursor-pointer border-b-2 border-border bg-secondary-background p-3 text-left text-sm font-base transition-colors last:border-b-0 hover:bg-primary hover:text-primary-foreground {font.value ===
+								class="cursor-pointer border-b-3 border-border bg-secondary-background p-3 text-left text-sm font-base transition-colors last:border-b-0 hover:bg-primary hover:text-primary-foreground {font.value ===
 								fontFamily
 									? 'bg-primary text-primary-foreground'
 									: ''}"
