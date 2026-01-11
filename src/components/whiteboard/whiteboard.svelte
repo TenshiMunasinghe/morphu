@@ -37,29 +37,44 @@
 	// Calculate canvas bounds based on post positions
 	let canvasBounds = $derived.by(() => {
 		const POST_SIZE = 400; // Approximate max post size
-		const PADDING = 200; // Extra space around posts
+		const PADDING = 100; // Extra space around posts
 		const MIN_WIDTH = typeof window !== 'undefined' ? window.innerWidth : 1200;
 		const MIN_HEIGHT = typeof window !== 'undefined' ? window.innerHeight : 800;
 
-		let minX = 0;
-		let minY = 0;
-		let maxX = MIN_WIDTH;
-		let maxY = MIN_HEIGHT;
+		if (localPlacements.length === 0) {
+			return { width: MIN_WIDTH, height: MIN_HEIGHT, offsetX: 0, offsetY: 0 };
+		}
+
+		// Find actual bounds of all posts
+		let minX = Infinity;
+		let minY = Infinity;
+		let maxX = -Infinity;
+		let maxY = -Infinity;
 
 		for (const placement of localPlacements) {
-			minX = Math.min(minX, placement.x - PADDING);
-			minY = Math.min(minY, placement.y - PADDING);
-			maxX = Math.max(maxX, placement.x + POST_SIZE + PADDING);
-			maxY = Math.max(maxY, placement.y + POST_SIZE + PADDING);
+			minX = Math.min(minX, placement.x);
+			minY = Math.min(minY, placement.y);
+			maxX = Math.max(maxX, placement.x + POST_SIZE);
+			maxY = Math.max(maxY, placement.y + POST_SIZE);
 		}
+
+		// Add padding around content
+		minX -= PADDING;
+		minY -= PADDING;
+		maxX += PADDING;
+		maxY += PADDING;
 
 		// Offset to shift everything into positive space
 		const offsetX = minX < 0 ? -minX : 0;
 		const offsetY = minY < 0 ? -minY : 0;
 
+		// Calculate content size
+		const contentWidth = maxX - minX;
+		const contentHeight = maxY - minY;
+
 		return {
-			width: maxX + offsetX,
-			height: maxY + offsetY,
+			width: Math.max(MIN_WIDTH, contentWidth),
+			height: Math.max(MIN_HEIGHT, contentHeight),
 			offsetX,
 			offsetY
 		};
@@ -121,9 +136,9 @@
 </script>
 
 <div
-	class="whiteboard relative overflow-auto bg-background"
-	style:min-width="{canvasBounds.width}px"
-	style:min-height="{canvasBounds.height}px"
+	class="whiteboard relative min-h-screen min-w-full bg-background"
+	style:width="{canvasBounds.width}px"
+	style:height="{canvasBounds.height}px"
 >
 	<ProfileIcon {profile} x={20 + canvasBounds.offsetX} y={20 + canvasBounds.offsetY} />
 
