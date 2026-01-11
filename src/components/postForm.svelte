@@ -5,6 +5,7 @@
 	import PaddingSelector from './paddingSelector.svelte';
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
+	import BorderStyleSelector, { type BorderStyle } from './borderStyleSelector.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { ChevronDown, GripHorizontal } from 'lucide-svelte';
 
@@ -36,7 +37,12 @@
 	let paddingBottomValue = $state(16);
 	let paddingLeftValue = $state(16);
 	let borderRadiusValue = $state(8);
+	let borderWidthValue = $state(2);
 	let textSizeValue = $state(16);
+
+	// Border styling
+	let borderColor = $state('#000000');
+	let borderStyle: BorderStyle = $state('solid');
 
 	function updateIndividual(axis: 'top' | 'right' | 'bottom' | 'left', value: number) {
 		if (axis === 'top') {
@@ -74,7 +80,9 @@
 	let paddingBottom = $derived(`${paddingBottomValue}px`);
 	let paddingLeft = $derived(`${paddingLeftValue}px`);
 	let borderRadius = $derived(`${borderRadiusValue}px`);
+	let borderWidth = $derived(`${borderWidthValue}px`);
 	let textSize = $derived(`${textSizeValue}px`);
+
 	let textOrientation: TextOrientation = $state('horizontal-tb');
 	let textAlign: TextAlignment = $state('left');
 	let fontFamily = $state('system-ui, sans-serif');
@@ -140,6 +148,9 @@
 			<div class="flex min-h-full items-center justify-center">
 				<Post
 					{borderRadius}
+					{borderColor}
+					{borderWidth}
+					{borderStyle}
 					{paddingTop}
 					{paddingRight}
 					{paddingBottom}
@@ -220,17 +231,9 @@
 				/>
 			</div>
 
-			<div class="grid grid-cols-2 items-center gap-4">
-				<label for="borderRadius" class="text-sm font-heading text-foreground">Border Radius</label>
-				<Slider
-					id="borderRadius"
-					type="single"
-					bind:value={borderRadiusValue}
-					min={0}
-					max={50}
-					step={2}
-				/>
-			</div>
+			<Separator class="my-4" />
+
+			<h3 class="text-center text-base font-heading">Typography</h3>
 
 			<div class="grid grid-cols-2 items-center gap-4">
 				<label for="textSize" class="text-sm font-heading text-foreground">Text Size</label>
@@ -306,7 +309,7 @@
 			<div class="grid grid-cols-2 gap-4">
 				<div class="flex flex-col gap-3">
 					<label for="textOrientation" class="text-sm font-heading text-foreground"
-						>Text Orientation</label
+						>Orientation</label
 					>
 					<TextOrientationSelector
 						{textOrientation}
@@ -315,12 +318,57 @@
 				</div>
 
 				<div class="flex flex-col gap-3">
-					<label for="textAlign" class="text-sm font-heading text-foreground">Text Alignment</label>
+					<label for="textAlign" class="text-sm font-heading text-foreground">Alignment</label>
 					<TextAlignmentSelector
 						{textAlign}
 						onTextAlignmentChange={(newValue: TextAlignment) => (textAlign = newValue)}
 					/>
 				</div>
+			</div>
+
+			<Separator class="my-4" />
+
+			<h3 class="text-center text-base font-heading">Border</h3>
+
+			<div class="flex flex-col gap-3">
+				<BorderStyleSelector
+					{borderStyle}
+					onBorderStyleChange={(newValue: BorderStyle) => (borderStyle = newValue)}
+				/>
+			</div>
+
+			<div class="grid grid-cols-2 items-center gap-4">
+				<label for="borderRadius" class="text-sm font-heading text-foreground">Radius</label>
+				<Slider
+					id="borderRadius"
+					type="single"
+					bind:value={borderRadiusValue}
+					min={0}
+					max={50}
+					step={2}
+				/>
+			</div>
+
+			<div class="grid grid-cols-2 items-center gap-4">
+				<label for="borderWidth" class="text-sm font-heading text-foreground">Width</label>
+				<Slider
+					id="borderWidth"
+					type="single"
+					bind:value={borderWidthValue}
+					min={0}
+					max={10}
+					step={1}
+				/>
+			</div>
+
+			<div class="flex items-center justify-between gap-2">
+				<label for="borderColor" class="text-sm font-heading text-foreground">Color</label>
+				<input
+					type="color"
+					id="borderColor"
+					bind:value={borderColor}
+					class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
+				/>
 			</div>
 		</form>
 	</div>

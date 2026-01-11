@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { TextAlignment } from './textAlignmentSelector.svelte';
 	import type { TextOrientation } from './textOrientationSelector.svelte';
+	import type { BorderStyle } from './borderStyleSelector.svelte';
 
 	interface Props {
 		borderRadius?: string;
-		border?: string;
 		borderColor?: string;
 		borderWidth?: string;
-		borderStyle?: string;
+		borderStyle?: BorderStyle;
 		borderTopLeftRadius?: string;
 		borderTopRightRadius?: string;
 		borderBottomLeftRadius?: string;
@@ -27,10 +27,9 @@
 	}
 
 	let {
-		border,
-		borderColor,
-		borderWidth,
-		borderStyle,
+		borderColor = '#000000',
+		borderWidth = '2px',
+		borderStyle = 'solid',
 		borderRadius = '8px',
 		paddingTop = '16px',
 		paddingRight = '16px',
@@ -48,8 +47,11 @@
 </script>
 
 <div
-	class="post-container border-2 border-border shadow-shadow"
+	class="post-container"
 	style:border-radius={borderRadius}
+	style:border-width={borderWidth}
+	style:border-color={borderColor}
+	style:border-style={borderStyle}
 	style:padding-top={paddingTop}
 	style:padding-right={paddingRight}
 	style:padding-bottom={paddingBottom}
