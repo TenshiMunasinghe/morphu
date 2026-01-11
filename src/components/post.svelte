@@ -68,7 +68,7 @@
 	style:background-color={backgroundColor}
 	style:color={textColor}
 	oninput={(e) => {
-		onContentChange?.(e.target?.textContent!); // it exists bro
+		onContentChange?.((e.target as HTMLElement)?.textContent ?? '');
 	}}
 	contenteditable={editable}
 >

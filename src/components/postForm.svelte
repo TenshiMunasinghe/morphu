@@ -6,7 +6,13 @@
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
 	import BorderStyleSelector, { type BorderStyle } from './borderStyleSelector.svelte';
+	import AccessibilityBanner from './accessibilityBanner.svelte';
 	import { ChevronDown, GripHorizontal } from 'lucide-svelte';
+
+	// TODO: Implement actual submission logic - will use checkAccessibility() to warn user before submission
+	function handleSubmit() {
+		// Placeholder for future implementation
+	}
 
 	// Preview resize state (vertical only)
 	let previewHeight = $state(200);
@@ -143,11 +149,6 @@
 		class="sticky top-0 z-50 w-full border-b-4 border-border bg-secondary-background"
 		style:height="{previewHeight}px"
 	>
-		<h2
-			class="absolute top-2 left-2 z-10 rounded-base border-2 border-border bg-foreground px-2 py-1 text-xs font-base text-secondary-background"
-		>
-			Preview
-		</h2>
 		<div class="h-full overflow-auto p-4">
 			<div class="flex min-h-full items-center justify-center">
 				<Post
@@ -170,6 +171,9 @@
 					editable={true}
 					onContentChange={(value) => (content = value)}
 				/>
+			</div>
+			<div class="absolute top-2 left-2 z-10">
+				<AccessibilityBanner {textColor} {backgroundColor} textSize={textSizeValue} {fontWeight} />
 			</div>
 		</div>
 		<!-- Resize handle (bottom edge) -->
@@ -361,6 +365,8 @@
 					class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
 				/>
 			</div>
+
+			<Button type="button" class="mt-4 w-full" onclick={handleSubmit}>Submit Post</Button>
 		</form>
 	</div>
 </div>
