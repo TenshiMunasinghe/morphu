@@ -164,9 +164,7 @@
 	let fontFamily = $state('system-ui, sans-serif');
 	let fontWeight = $state('400');
 	let fontStyle: 'normal' | 'italic' | 'oblique' = $state('normal');
-	let content = $state(
-		'これは場合できるだけその卒業院においてものの日にしよませなら。よく昨日で評地もただいまそうした推薦ですますまでを甘んじばならたには反駁食わせろですですから、こうには参りないなでた。'
-	);
+	let content = $state('I want my border nice and rounded');
 	let backgroundColor = $state('#ffffff');
 	let textColor = $state('#000000');
 	let isProfile = $state(false);
@@ -211,14 +209,15 @@
 	);
 </script>
 
-<div class="min-h-screen bg-background">
+<!-- Mobile Layout -->
+<div class="min-h-screen bg-background lg:hidden">
 	<!-- Preview Section - Sticky at top, full width, vertically resizable -->
 	<div
 		class="sticky top-0 z-50 w-full border-b-4 border-border bg-secondary-background"
 		style:height="{previewHeight}px"
 	>
 		<div class="h-full overflow-auto p-4">
-			<div class="flex min-h-full items-center justify-center">
+			<div class="flex min-h-full items-center justify-center overflow-scroll">
 				<Post
 					{borderRadius}
 					{borderColor}
@@ -258,7 +257,7 @@
 	</div>
 
 	<!-- Form Section - Below preview, scrollable -->
-	<div class="mx-auto max-w-2xl bg-secondary-background p-6 lg:p-8">
+	<div class="mx-auto max-w-2xl bg-secondary-background p-6">
 		<form class="flex flex-col gap-8 pb-8">
 			<h2 class="text-center text-lg font-heading">Style your Post!</h2>
 
@@ -462,6 +461,296 @@
 				<input
 					type="color"
 					id="borderColor"
+					bind:value={borderColor}
+					class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
+				/>
+			</div>
+
+			<label class="mt-4 flex cursor-pointer items-center gap-3">
+				<button
+					type="button"
+					role="checkbox"
+					aria-checked={isProfile}
+					class="flex h-5 w-5 items-center justify-center rounded-base border-2 border-border bg-background transition-colors"
+					class:bg-primary={isProfile}
+					onclick={() => (isProfile = !isProfile)}
+				>
+					{#if isProfile}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="3"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="h-3 w-3 text-primary-foreground"
+						>
+							<polyline points="20 6 9 17 4 12"></polyline>
+						</svg>
+					{/if}
+				</button>
+				<span class="text-sm font-heading text-foreground">Set as Profile Post</span>
+			</label>
+
+			<Button type="button" class="mt-4 w-full" onclick={handleSubmit}>Submit Post</Button>
+		</form>
+	</div>
+</div>
+
+<!-- Desktop Layout - Split Screen -->
+<div class="hidden h-screen bg-background lg:flex">
+	<!-- Left Side - Preview -->
+	<div class="flex w-1/2 flex-col border-r-4 border-border bg-secondary-background">
+		<div class="relative flex flex-1 items-center justify-center overflow-auto p-8">
+			<Post
+				{borderRadius}
+				{borderColor}
+				{borderWidth}
+				{borderStyle}
+				{paddingTop}
+				{paddingRight}
+				{paddingBottom}
+				{paddingLeft}
+				{textSize}
+				{textOrientation}
+				{textAlign}
+				{fontFamily}
+				{fontWeight}
+				{fontStyle}
+				{content}
+				{backgroundColor}
+				{textColor}
+				editable={true}
+				onContentChange={(value) => (content = value)}
+			/>
+			<div class="absolute top-4 left-4">
+				<AccessibilityBanner {textColor} {backgroundColor} textSize={textSizeValue} {fontWeight} />
+			</div>
+		</div>
+	</div>
+
+	<!-- Right Side - Form -->
+	<div class="w-1/2 overflow-y-auto bg-secondary-background p-8">
+		<form class="mx-auto flex max-w-md flex-col gap-8 pb-8">
+			<h2 class="text-center text-lg font-heading">Style your Post!</h2>
+
+			<div class="grid grid-cols-2 gap-8 text-sm">
+				<div class="flex items-center justify-between gap-2">
+					<label for="textColor-desktop" class="font-bold">Text</label>
+					<input
+						type="color"
+						id="textColor-desktop"
+						bind:value={textColor}
+						class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
+					/>
+				</div>
+
+				<div class="flex items-center justify-between gap-2">
+					<label for="backgroundColor-desktop" class="font-bold">Background</label>
+					<input
+						type="color"
+						id="backgroundColor-desktop"
+						bind:value={backgroundColor}
+						class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
+					/>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-3">
+				<div class="text-sm font-heading text-foreground">Padding</div>
+				<PaddingSelector
+					{updateAll}
+					{updateAxis}
+					{updateIndividual}
+					padding={{
+						top: paddingTopValue,
+						right: paddingRightValue,
+						bottom: paddingBottomValue,
+						left: paddingLeftValue
+					}}
+				/>
+			</div>
+
+			<h3 class="text-center text-base font-heading">Typography</h3>
+
+			<div class="grid grid-cols-2 items-center gap-4">
+				<label for="textSize-desktop" class="text-sm font-heading text-foreground">Text Size</label>
+				<Slider
+					id="textSize-desktop"
+					type="single"
+					bind:value={textSizeValue}
+					min={8}
+					max={48}
+					step={2}
+				/>
+			</div>
+
+			<div class="flex flex-col gap-3">
+				<label for="fontWeight-desktop" class="text-sm font-heading text-foreground"
+					>Font Weight</label
+				>
+				<div class="flex gap-2">
+					<Button
+						type="button"
+						variant={fontWeight === '300' ? 'default' : 'outline'}
+						class="flex-1 font-light"
+						onclick={() => (fontWeight = '300')}
+					>
+						Light
+					</Button>
+					<Button
+						type="button"
+						variant={fontWeight === '400' ? 'default' : 'outline'}
+						class="flex-1 font-normal"
+						onclick={() => (fontWeight = '400')}
+					>
+						Normal
+					</Button>
+					<Button
+						type="button"
+						variant={fontWeight === '700' ? 'default' : 'outline'}
+						class="flex-1 font-bold"
+						onclick={() => (fontWeight = '700')}
+					>
+						Bold
+					</Button>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-3">
+				<label for="fontStyle-desktop" class="text-sm font-heading text-foreground"
+					>Font Style</label
+				>
+				<div class="flex gap-2">
+					<Button
+						type="button"
+						variant={fontStyle === 'normal' ? 'default' : 'outline'}
+						class="flex-1"
+						onclick={() => (fontStyle = 'normal')}
+					>
+						Normal
+					</Button>
+					<Button
+						type="button"
+						variant={fontStyle === 'italic' ? 'default' : 'outline'}
+						class="flex-1 italic"
+						onclick={() => (fontStyle = 'italic')}
+					>
+						Italic
+					</Button>
+					<Button
+						type="button"
+						variant={fontStyle === 'oblique' ? 'default' : 'outline'}
+						class="flex-1"
+						style="font-style: oblique;"
+						onclick={() => (fontStyle = 'oblique')}
+					>
+						Oblique
+					</Button>
+				</div>
+			</div>
+
+			<div class="font-select-container relative flex flex-col gap-3">
+				<label for="fontFamily-desktop" class="text-sm font-heading text-foreground"
+					>Font Family</label
+				>
+				<Button
+					type="button"
+					variant="outline"
+					class="flex w-full items-center justify-between"
+					onclick={toggleFontSelect}
+					aria-expanded={isFontSelectOpen}
+					aria-haspopup="listbox"
+				>
+					<span class="flex-1 text-left" style:font-family={selectedFont.font}>
+						{selectedFont.label}
+					</span>
+					<ChevronDown />
+				</Button>
+				{#if isFontSelectOpen}
+					<div
+						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-75 flex-col overflow-y-auto rounded-base border-3 border-border bg-secondary-background shadow-shadow"
+					>
+						{#each fontFamilies as font (font.value)}
+							<button
+								type="button"
+								class="cursor-pointer border-b-3 border-border bg-secondary-background p-3 text-left text-sm font-base transition-colors last:border-b-0 hover:bg-primary hover:text-primary-foreground {font.value ===
+								fontFamily
+									? 'bg-primary text-primary-foreground'
+									: ''}"
+								onclick={() => selectFont(font.value)}
+								style:font-family={font.font}
+							>
+								{font.label}
+							</button>
+						{/each}
+					</div>
+				{/if}
+			</div>
+
+			<div class="grid grid-cols-2 gap-4">
+				<div class="flex flex-col gap-3">
+					<label for="textOrientation-desktop" class="text-sm font-heading text-foreground"
+						>Orientation</label
+					>
+					<TextOrientationSelector
+						{textOrientation}
+						setTextOrientation={(newValue: TextOrientation) => (textOrientation = newValue)}
+					/>
+				</div>
+
+				<div class="flex flex-col gap-3">
+					<label for="textAlign-desktop" class="text-sm font-heading text-foreground"
+						>Alignment</label
+					>
+					<TextAlignmentSelector
+						{textAlign}
+						onTextAlignmentChange={(newValue: TextAlignment) => (textAlign = newValue)}
+					/>
+				</div>
+			</div>
+
+			<h3 class="text-center text-base font-heading">Border</h3>
+
+			<div class="flex flex-col gap-3">
+				<BorderStyleSelector
+					{borderStyle}
+					onBorderStyleChange={(newValue: BorderStyle) => (borderStyle = newValue)}
+				/>
+			</div>
+
+			<div class="grid grid-cols-2 items-center gap-4">
+				<label for="borderRadius-desktop" class="text-sm font-heading text-foreground">Radius</label
+				>
+
+				<Slider
+					id="borderRadius-desktop"
+					type="single"
+					bind:value={borderRadiusValue}
+					min={0}
+					max={100}
+					step={2}
+				/>
+			</div>
+
+			<div class="grid grid-cols-2 items-center gap-4">
+				<label for="borderWidth-desktop" class="text-sm font-heading text-foreground">Width</label>
+				<Slider
+					id="borderWidth-desktop"
+					type="single"
+					bind:value={borderWidthValue}
+					min={0}
+					max={10}
+					step={1}
+				/>
+			</div>
+
+			<div class="flex items-center justify-between gap-2">
+				<label for="borderColor-desktop" class="text-sm font-heading text-foreground">Color</label>
+				<input
+					type="color"
+					id="borderColor-desktop"
 					bind:value={borderColor}
 					class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
 				/>

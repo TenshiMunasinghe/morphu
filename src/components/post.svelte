@@ -102,15 +102,7 @@
 
 <style>
 	.post-container {
-		max-width: 100%;
 		max-height: 50ch;
-		overflow: auto;
 		box-sizing: border-box;
-	}
-
-	@media (max-width: 1023px) {
-		.post-container {
-			max-width: 100%;
-		}
 	}
 </style>
