@@ -2,11 +2,11 @@
 	import Post from './post.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Slider } from '$lib/components/ui/slider/index';
+	import { Textarea } from '$lib/components/ui/textarea/index';
 	import PaddingSelector from './paddingSelector.svelte';
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
 	import BorderStyleSelector, { type BorderStyle } from './borderStyleSelector.svelte';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { ChevronDown, GripHorizontal } from 'lucide-svelte';
 
 	// Preview resize state (vertical only)
@@ -187,16 +187,14 @@
 	<div class="mx-auto max-w-2xl bg-secondary-background p-6 lg:p-8">
 		<form class="flex flex-col gap-8 pb-8">
 			<div class="flex flex-col gap-2">
-				<textarea
-					class="resize-none overflow-y-scroll bg-secondary-background p-3 font-base outline-none"
+				<Textarea
+					class="resize-none"
 					id="content"
 					bind:value={content}
-					rows="4"
+					rows={6}
 					placeholder="Enter your post content..."
-				></textarea>
+				/>
 			</div>
-
-			<Separator class="my-4" />
 
 			<h2 class="text-center text-lg font-heading">Style your Post!</h2>
 
@@ -236,8 +234,6 @@
 					}}
 				/>
 			</div>
-
-			<Separator class="my-4" />
 
 			<h3 class="text-center text-base font-heading">Typography</h3>
 
@@ -331,8 +327,6 @@
 					/>
 				</div>
 			</div>
-
-			<Separator class="my-4" />
 
 			<h3 class="text-center text-base font-heading">Border</h3>
 
