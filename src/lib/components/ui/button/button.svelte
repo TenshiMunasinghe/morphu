@@ -11,7 +11,8 @@
 				destructive: 'bg-destructive text-white',
 				outline: 'bg-secondary-background text-foreground',
 				secondary: 'bg-secondary-background text-foreground',
-				ghost: 'border-transparent shadow-none hover:bg-secondary-background hover:border-border hover:shadow-shadow',
+				ghost:
+					'border-transparent shadow-none hover:bg-secondary-background hover:border-border hover:shadow-shadow',
 				link: 'border-transparent shadow-none text-primary underline-offset-4 hover:underline hover:translate-x-0 hover:translate-y-0'
 			},
 			size: {
