@@ -123,7 +123,8 @@
 			{ "postId": "demo-3", "x": 150, "y": 320, "zIndex": 3 },
 			{ "postId": "demo-4", "x": 500, "y": 280, "zIndex": 4 },
 			{ "postId": "demo-5", "x": 50, "y": 500, "zIndex": 5 }
-		]
+		],
+		"profilePlacement": { "userProfileId": "user-1", "x": 20, "y": 20 }
 	},
 	"profile": {
 		"id": "user-1",

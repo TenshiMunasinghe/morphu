@@ -43,6 +43,7 @@
 	class="profile-icon-container absolute z-9999 cursor-grab active:cursor-grabbing"
 	use:draggable={{
 		position,
+		bounds: 'parent',
 		onDragEnd: handleDragEnd
 	}}
 >

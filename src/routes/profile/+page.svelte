@@ -33,7 +33,8 @@
 				(p) => !savedPostIds.has(p.postId)
 			);
 			whiteboardState = {
-				placements: [...savedState.placements, ...missingDummyPlacements]
+				placements: [...savedState.placements, ...missingDummyPlacements],
+				profilePlacement: savedState.profilePlacement || dummyState.profilePlacement
 			};
 		}
 		// If no saved state, keep the dummy state (already initialized)
