@@ -258,7 +258,7 @@
 
 	<!-- Form Section - Below preview, scrollable -->
 	<div class="mx-auto max-w-2xl bg-secondary-background p-6">
-		<form class="flex flex-col gap-8 pb-8">
+		<form class="flex flex-col gap-12 pb-8">
 			<h2 class="text-center text-lg font-heading">Style your Post!</h2>
 
 			<div class="grid grid-cols-2 gap-8 text-sm">
