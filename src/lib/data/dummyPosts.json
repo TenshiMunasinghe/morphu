@@ -1,0 +1,134 @@
+{
+	"posts": [
+		{
+			"id": "demo-1",
+			"content": "Welcome to my profile! 🎨",
+			"style": {
+				"borderRadius": "16px",
+				"borderColor": "#000000",
+				"borderWidth": "3px",
+				"borderStyle": "solid",
+				"paddingTop": "20px",
+				"paddingRight": "20px",
+				"paddingBottom": "20px",
+				"paddingLeft": "20px",
+				"textSize": "18px",
+				"textOrientation": "horizontal-tb",
+				"textAlign": "center",
+				"fontFamily": "system-ui, sans-serif",
+				"fontWeight": "700",
+				"fontStyle": "normal",
+				"backgroundColor": "#fef08a",
+				"textColor": "#000000"
+			},
+			"createdAt": "2026-01-01T00:00:00Z"
+		},
+		{
+			"id": "demo-2",
+			"content": "縦書きテキスト",
+			"style": {
+				"borderRadius": "8px",
+				"borderColor": "#dc2626",
+				"borderWidth": "2px",
+				"borderStyle": "solid",
+				"paddingTop": "16px",
+				"paddingRight": "16px",
+				"paddingBottom": "16px",
+				"paddingLeft": "16px",
+				"textSize": "20px",
+				"textOrientation": "vertical-rl",
+				"textAlign": "left",
+				"fontFamily": "Georgia, serif",
+				"fontWeight": "400",
+				"fontStyle": "normal",
+				"backgroundColor": "#fef2f2",
+				"textColor": "#991b1b"
+			},
+			"createdAt": "2026-01-02T00:00:00Z"
+		},
+		{
+			"id": "demo-3",
+			"content": "This post has a dashed border and italic text styling. Pretty cool, right?",
+			"style": {
+				"borderRadius": "0px",
+				"borderColor": "#2563eb",
+				"borderWidth": "3px",
+				"borderStyle": "dashed",
+				"paddingTop": "24px",
+				"paddingRight": "24px",
+				"paddingBottom": "24px",
+				"paddingLeft": "24px",
+				"textSize": "14px",
+				"textOrientation": "horizontal-tb",
+				"textAlign": "left",
+				"fontFamily": "Georgia, serif",
+				"fontWeight": "400",
+				"fontStyle": "italic",
+				"backgroundColor": "#eff6ff",
+				"textColor": "#1e40af"
+			},
+			"createdAt": "2026-01-03T00:00:00Z"
+		},
+		{
+			"id": "demo-4",
+			"content": "BOLD & CENTERED",
+			"style": {
+				"borderRadius": "50px",
+				"borderColor": "#000000",
+				"borderWidth": "4px",
+				"borderStyle": "double",
+				"paddingTop": "32px",
+				"paddingRight": "32px",
+				"paddingBottom": "32px",
+				"paddingLeft": "32px",
+				"textSize": "24px",
+				"textOrientation": "horizontal-tb",
+				"textAlign": "center",
+				"fontFamily": "Arial, sans-serif",
+				"fontWeight": "700",
+				"fontStyle": "normal",
+				"backgroundColor": "#f0fdf4",
+				"textColor": "#166534"
+			},
+			"createdAt": "2026-01-04T00:00:00Z"
+		},
+		{
+			"id": "demo-5",
+			"content": "Minimalist vibes ✨",
+			"style": {
+				"borderRadius": "4px",
+				"borderColor": "#d1d5db",
+				"borderWidth": "1px",
+				"borderStyle": "solid",
+				"paddingTop": "12px",
+				"paddingRight": "16px",
+				"paddingBottom": "12px",
+				"paddingLeft": "16px",
+				"textSize": "14px",
+				"textOrientation": "horizontal-tb",
+				"textAlign": "right",
+				"fontFamily": "Courier New, monospace",
+				"fontWeight": "300",
+				"fontStyle": "normal",
+				"backgroundColor": "#ffffff",
+				"textColor": "#6b7280"
+			},
+			"createdAt": "2026-01-05T00:00:00Z"
+		}
+	],
+	"whiteboard": {
+		"placements": [
+			{ "postId": "demo-1", "x": 80, "y": 100, "zIndex": 1 },
+			{ "postId": "demo-2", "x": 400, "y": 80, "zIndex": 2 },
+			{ "postId": "demo-3", "x": 150, "y": 320, "zIndex": 3 },
+			{ "postId": "demo-4", "x": 500, "y": 280, "zIndex": 4 },
+			{ "postId": "demo-5", "x": 50, "y": 500, "zIndex": 5 }
+		]
+	},
+	"profile": {
+		"id": "user-1",
+		"username": "morphu_user",
+		"avatarUrl": "",
+		"bio": "Creating beautiful posts with Morphu! 🎨"
+	}
+}

@@ -1,0 +1,68 @@
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import Whiteboard from '../../components/whiteboard/whiteboard.svelte';
+	import type { PostData } from '$lib/types/post';
+	import type { WhiteboardState, UserProfile } from '$lib/types/whiteboard';
+	import { getPosts, getWhiteboardState, saveWhiteboardState, deletePost } from '$lib/stores/posts';
+	import dummyData from '$lib/data/dummyPosts.json';
+
+	// Combine dummy posts with user-created posts from localStorage
+	let allPosts = $state<PostData[]>([]);
+	let whiteboardState = $state<WhiteboardState>({ placements: [] });
+	let profile = $state<UserProfile>(dummyData.profile as UserProfile);
+
+	// Track which posts are demo posts (cannot be deleted)
+	const demoPostIds = new Set((dummyData.posts as PostData[]).map((p) => p.id));
+
+	onMount(() => {
+		// Load user posts from localStorage
+		const userPosts = getPosts();
+
+		// Combine with dummy posts (dummy posts first, then user posts)
+		allPosts = [...(dummyData.posts as PostData[]), ...userPosts];
+
+		// Load whiteboard state: merge localStorage state with dummy state
+		const savedState = getWhiteboardState();
+		const dummyState = dummyData.whiteboard as WhiteboardState;
+
+		if (savedState) {
+			// Merge: use saved placements, add any missing from dummy
+			const savedPostIds = new Set(savedState.placements.map((p) => p.postId));
+			const missingDummyPlacements = dummyState.placements.filter(
+				(p) => !savedPostIds.has(p.postId)
+			);
+			whiteboardState = {
+				placements: [...savedState.placements, ...missingDummyPlacements]
+			};
+		} else {
+			whiteboardState = dummyState;
+		}
+	});
+
+	function handleStateChange(state: WhiteboardState) {
+		whiteboardState = state;
+		saveWhiteboardState(state);
+	}
+
+	function handleDeletePost(postId: string) {
+		// Remove from localStorage
+		deletePost(postId);
+		// Remove from local state
+		allPosts = allPosts.filter((p) => p.id !== postId);
+	}
+</script>
+
+<svelte:head>
+	<title>Profile | Morphu</title>
+</svelte:head>
+
+<div class="h-screen w-screen overflow-auto">
+	<Whiteboard
+		posts={allPosts}
+		{demoPostIds}
+		initialState={whiteboardState}
+		{profile}
+		onStateChange={handleStateChange}
+		onDeletePost={handleDeletePost}
+	/>
+</div>

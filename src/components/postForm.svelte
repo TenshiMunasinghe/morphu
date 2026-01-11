@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Post from './post.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Slider } from '$lib/components/ui/slider/index';
@@ -8,10 +9,73 @@
 	import BorderStyleSelector, { type BorderStyle } from './borderStyleSelector.svelte';
 	import AccessibilityBanner from './accessibilityBanner.svelte';
 	import { ChevronDown, GripHorizontal } from 'lucide-svelte';
+	import { generatePostId, type PostData, type PostStyle } from '$lib/types/post';
+	import { savePost, addPostPlacement } from '$lib/stores/posts';
+	import { checkAccessibility } from '$lib/lib/accessibility';
 
-	// TODO: Implement actual submission logic - will use checkAccessibility() to warn user before submission
 	function handleSubmit() {
-		// Placeholder for future implementation
+		// Check for accessibility warnings
+		const warnings = checkAccessibility({
+			textColor,
+			backgroundColor,
+			textSize: textSizeValue,
+			fontWeight
+		});
+
+		if (warnings.length > 0) {
+			const warningMessages = warnings.map((w) => `• ${w.message}`).join('\n');
+			const proceed = confirm(
+				`Your post has accessibility warnings:\n\n${warningMessages}\n\nDo you want to submit anyway?`
+			);
+			if (!proceed) {
+				return;
+			}
+		}
+
+		// Validate content
+		if (!content.trim()) {
+			alert('Please enter some content for your post.');
+			return;
+		}
+
+		// Create post style object
+		const style: PostStyle = {
+			borderRadius,
+			borderColor,
+			borderWidth,
+			borderStyle,
+			paddingTop,
+			paddingRight,
+			paddingBottom,
+			paddingLeft,
+			textSize,
+			textOrientation,
+			textAlign,
+			fontFamily,
+			fontWeight,
+			fontStyle,
+			backgroundColor,
+			textColor
+		};
+
+		// Create post data
+		const post: PostData = {
+			id: generatePostId(),
+			content,
+			style,
+			createdAt: new Date().toISOString()
+		};
+
+		// Save post to localStorage
+		savePost(post);
+
+		// Add placement for the new post (random position near center)
+		const x = 150 + Math.random() * 200;
+		const y = 150 + Math.random() * 200;
+		addPostPlacement(post.id, x, y);
+
+		// Navigate to profile page
+		goto('/profile');
 	}
 
 	// Preview resize state (vertical only)
