@@ -2,7 +2,6 @@
 	import Post from './post.svelte';
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { Slider } from '$lib/components/ui/slider/index';
-	import { Textarea } from '$lib/components/ui/textarea/index';
 	import PaddingSelector from './paddingSelector.svelte';
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
@@ -168,6 +167,8 @@
 					{content}
 					{backgroundColor}
 					{textColor}
+					editable={true}
+					onContentChange={(value) => (content = value)}
 				/>
 			</div>
 		</div>
@@ -186,16 +187,6 @@
 	<!-- Form Section - Below preview, scrollable -->
 	<div class="mx-auto max-w-2xl bg-secondary-background p-6 lg:p-8">
 		<form class="flex flex-col gap-8 pb-8">
-			<div class="flex flex-col gap-2">
-				<Textarea
-					class="resize-none"
-					id="content"
-					bind:value={content}
-					rows={6}
-					placeholder="Enter your post content..."
-				/>
-			</div>
-
 			<h2 class="text-center text-lg font-heading">Style your Post!</h2>
 
 			<div class="grid grid-cols-2 gap-8 text-sm">

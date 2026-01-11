@@ -24,6 +24,8 @@
 		content?: string;
 		backgroundColor?: string;
 		textColor?: string;
+		editable?: boolean;
+		onContentChange?: (value: string) => void;
 	}
 
 	let {
@@ -42,7 +44,9 @@
 		fontWeight = '400',
 		content = 'This is a sample social media post. You can customize its appearance using the form controls!',
 		backgroundColor = '#ffffff',
-		textColor = '#000000'
+		textColor = '#000000',
+		editable = false,
+		onContentChange
 	}: Props = $props();
 </script>
 
@@ -63,6 +67,10 @@
 	style:font-weight={fontWeight}
 	style:background-color={backgroundColor}
 	style:color={textColor}
+	oninput={(e) => {
+		onContentChange?.(e.target?.textContent!); // it exists bro
+	}}
+	contenteditable={editable}
 >
 	{content}
 </div>
