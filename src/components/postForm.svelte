@@ -97,6 +97,7 @@
 	let textAlign: TextAlignment = $state('left');
 	let fontFamily = $state('system-ui, sans-serif');
 	let fontWeight = $state('400');
+	let fontStyle: 'normal' | 'italic' | 'oblique' = $state('normal');
 	let content = $state(
 		'これは場合できるだけその卒業院においてものの日にしよませなら。よく昨日で評地もただいまそうした推薦ですますまでを甘んじばならたには反駁食わせろですですから、こうには参りないなでた。'
 	);
@@ -165,6 +166,7 @@
 					{textAlign}
 					{fontFamily}
 					{fontWeight}
+					{fontStyle}
 					{content}
 					{backgroundColor}
 					{textColor}
@@ -263,6 +265,37 @@
 						onclick={() => (fontWeight = '700')}
 					>
 						Bold
+					</Button>
+				</div>
+			</div>
+
+			<div class="flex flex-col gap-3">
+				<label for="fontStyle" class="text-sm font-heading text-foreground">Font Style</label>
+				<div class="flex gap-2">
+					<Button
+						type="button"
+						variant={fontStyle === 'normal' ? 'default' : 'outline'}
+						class="flex-1"
+						onclick={() => (fontStyle = 'normal')}
+					>
+						Normal
+					</Button>
+					<Button
+						type="button"
+						variant={fontStyle === 'italic' ? 'default' : 'outline'}
+						class="flex-1 italic"
+						onclick={() => (fontStyle = 'italic')}
+					>
+						Italic
+					</Button>
+					<Button
+						type="button"
+						variant={fontStyle === 'oblique' ? 'default' : 'outline'}
+						class="flex-1"
+						style="font-style: oblique;"
+						onclick={() => (fontStyle = 'oblique')}
+					>
+						Oblique
 					</Button>
 				</div>
 			</div>

@@ -21,6 +21,7 @@
 		textAlign?: TextAlignment;
 		fontFamily?: string;
 		fontWeight?: string;
+		fontStyle?: 'normal' | 'italic' | 'oblique';
 		content?: string;
 		backgroundColor?: string;
 		textColor?: string;
@@ -42,6 +43,7 @@
 		textAlign = 'left',
 		fontFamily = 'system-ui, sans-serif',
 		fontWeight = '400',
+		fontStyle = 'normal',
 		content = 'This is a sample social media post. You can customize its appearance using the form controls!',
 		backgroundColor = '#ffffff',
 		textColor = '#000000',
@@ -65,6 +67,7 @@
 	style:text-align={textAlign}
 	style:font-family={fontFamily}
 	style:font-weight={fontWeight}
+	style:font-style={fontStyle}
 	style:background-color={backgroundColor}
 	style:color={textColor}
 	oninput={(e) => {
