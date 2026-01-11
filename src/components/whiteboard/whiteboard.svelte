@@ -1,23 +1,15 @@
 <script lang="ts">
 	import DraggablePost from './draggablePost.svelte';
-	import ProfileIcon from './profileIcon.svelte';
 	import type { PostData } from '$lib/types/post';
-	import type {
-		WhiteboardState,
-		UserProfile,
-		PostPlacement,
-		ProfilePlacement
-	} from '$lib/types/whiteboard';
+	import type { WhiteboardState, PostPlacement } from '$lib/types/whiteboard';
 	import { SvelteMap } from 'svelte/reactivity';
 
 	const CANVAS_SIZE = 2026;
-	const DEFAULT_PROFILE_POSITION = { x: 20, y: 20 };
 
 	interface Props {
 		posts: PostData[];
 		demoPostIds?: Set<string>;
 		initialState?: WhiteboardState;
-		profile: UserProfile;
 		onStateChange?: (state: WhiteboardState) => void;
 		onDeletePost?: (postId: string) => void;
 	}
@@ -26,7 +18,6 @@
 		posts,
 		demoPostIds = new Set(),
 		initialState,
-		profile,
 		onStateChange,
 		onDeletePost
 	}: Props = $props();
@@ -34,20 +25,6 @@
 	// Use initialState placements directly, with local mutations tracked separately
 	let localPlacementOverrides = $state<Map<string, PostPlacement>>(new Map());
 	let localMaxZIndex = $state(1);
-
-	// Profile icon position
-	let localProfilePlacement = $state<ProfilePlacement | null>(null);
-
-	// Get current profile position (local override or from initialState or default)
-	let profilePosition = $derived.by(() => {
-		if (localProfilePlacement) {
-			return { x: localProfilePlacement.x, y: localProfilePlacement.y };
-		}
-		if (initialState?.profilePlacement) {
-			return { x: initialState.profilePlacement.x, y: initialState.profilePlacement.y };
-		}
-		return DEFAULT_PROFILE_POSITION;
-	});
 
 	// Combine initial placements with local overrides
 	let localPlacements = $derived.by(() => {
@@ -114,8 +91,7 @@
 		localPlacementOverrides = new SvelteMap(localPlacementOverrides); // Trigger reactivity
 
 		onStateChange?.({
-			placements: localPlacements,
-			profilePlacement: localProfilePlacement || initialState?.profilePlacement
+			placements: localPlacements
 		});
 	}
 
@@ -138,27 +114,9 @@
 		// Notify parent to remove from state and storage
 		const remainingPlacements = localPlacements.filter((p) => p.postId !== postId);
 		onStateChange?.({
-			placements: remainingPlacements,
-			profilePlacement: localProfilePlacement || initialState?.profilePlacement
+			placements: remainingPlacements
 		});
 		onDeletePost?.(postId);
-	}
-
-	function handleProfilePositionChange(x: number, y: number) {
-		// Clamp position to canvas bounds
-		const clampedX = Math.max(0, Math.min(CANVAS_SIZE - 64, x));
-		const clampedY = Math.max(0, Math.min(CANVAS_SIZE - 64, y));
-
-		localProfilePlacement = {
-			userProfileId: profile.id,
-			x: clampedX,
-			y: clampedY
-		};
-
-		onStateChange?.({
-			placements: localPlacements,
-			profilePlacement: localProfilePlacement
-		});
 	}
 </script>
 
@@ -167,13 +125,6 @@
 	style:width="{CANVAS_SIZE}px"
 	style:height="{CANVAS_SIZE}px"
 >
-	<ProfileIcon
-		{profile}
-		x={profilePosition.x}
-		y={profilePosition.y}
-		onPositionChange={handleProfilePositionChange}
-	/>
-
 	{#each posts as post, index (post.id)}
 		{@const placement = getPlacement(post.id, index)}
 		<DraggablePost
@@ -181,7 +132,7 @@
 			x={placement.x}
 			y={placement.y}
 			zIndex={placement.zIndex}
-			isDemoPost={demoPostIds.has(post.id)}
+			isDemoPost={demoPostIds.has(post.id) || post.isProfile === true}
 			onPositionChange={handlePositionChange}
 			onDragStart={handleDragStart}
 			onDelete={handleDelete}

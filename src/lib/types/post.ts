@@ -26,6 +26,7 @@ export interface PostData {
 	content: string;
 	style: PostStyle;
 	createdAt: string;
+	isProfile?: boolean;
 }
 
 export function generatePostId(): string {

@@ -2,14 +2,13 @@
 	import { onMount } from 'svelte';
 	import Whiteboard from '../../components/whiteboard/whiteboard.svelte';
 	import type { PostData } from '$lib/types/post';
-	import type { WhiteboardState, UserProfile } from '$lib/types/whiteboard';
+	import type { WhiteboardState } from '$lib/types/whiteboard';
 	import { getPosts, getWhiteboardState, saveWhiteboardState, deletePost } from '$lib/stores/posts';
 	import dummyData from '$lib/data/dummyPosts.json';
 
 	// Initialize with dummy data (available at SSR time)
 	let allPosts = $state<PostData[]>(dummyData.posts as PostData[]);
 	let whiteboardState = $state<WhiteboardState>(dummyData.whiteboard as WhiteboardState);
-	let profile = $state<UserProfile>(dummyData.profile as UserProfile);
 	let isReady = $state(false);
 
 	// Track which posts are demo posts (cannot be deleted)
@@ -33,8 +32,7 @@
 				(p) => !savedPostIds.has(p.postId)
 			);
 			whiteboardState = {
-				placements: [...savedState.placements, ...missingDummyPlacements],
-				profilePlacement: savedState.profilePlacement || dummyState.profilePlacement
+				placements: [...savedState.placements, ...missingDummyPlacements]
 			};
 		}
 		// If no saved state, keep the dummy state (already initialized)
@@ -65,7 +63,6 @@
 			posts={allPosts}
 			{demoPostIds}
 			initialState={whiteboardState}
-			{profile}
 			onStateChange={handleStateChange}
 			onDeletePost={handleDeletePost}
 		/>

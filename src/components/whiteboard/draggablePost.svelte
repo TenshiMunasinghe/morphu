@@ -29,6 +29,7 @@
 
 	let position = $derived({ x, y });
 	let isHovered = $state(false);
+	let isPopoverOpen = $state(false);
 
 	function handleDragStart() {
 		onDragStart?.(post.id);
@@ -44,12 +45,42 @@
 			onDelete?.(post.id);
 		}
 	}
+
+	function handleClick() {
+		if (post.isProfile) {
+			isPopoverOpen = !isPopoverOpen;
+		}
+	}
+
+	function handleKeydown(e: KeyboardEvent) {
+		if (post.isProfile && (e.key === 'Enter' || e.key === ' ')) {
+			e.preventDefault();
+			isPopoverOpen = !isPopoverOpen;
+		}
+	}
+
+	function handleClickOutside(event: MouseEvent) {
+		const target = event.target as HTMLElement;
+		if (!target.closest('.profile-popover-container')) {
+			isPopoverOpen = false;
+		}
+	}
+
+	$effect(() => {
+		if (isPopoverOpen) {
+			document.addEventListener('click', handleClickOutside);
+			return () => document.removeEventListener('click', handleClickOutside);
+		}
+	});
 </script>
 
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	class="draggable-post absolute cursor-grab active:cursor-grabbing"
+	class:profile-popover-container={post.isProfile}
 	style:z-index={zIndex}
-	role="article"
+	role={post.isProfile ? 'button' : 'article'}
+	tabindex={post.isProfile ? 0 : undefined}
 	use:draggable={{
 		position,
 		bounds: 'parent',
@@ -58,6 +89,8 @@
 	}}
 	onmouseenter={() => (isHovered = true)}
 	onmouseleave={() => (isHovered = false)}
+	onclick={handleClick}
+	onkeydown={handleKeydown}
 >
 	{#if !isDemoPost && isHovered}
 		<Button
@@ -90,6 +123,18 @@
 		backgroundColor={post.style.backgroundColor}
 		textColor={post.style.textColor}
 	/>
+
+	{#if post.isProfile && isPopoverOpen}
+		<div
+			class="absolute top-full left-0 z-50 mt-2 w-64 rounded-base border-2 border-border bg-secondary-background p-4 shadow-shadow"
+		>
+			<div class="flex flex-col gap-2">
+				<p class="text-sm font-base text-foreground/80">
+					This is your profile post. You can style it however you like!
+				</p>
+			</div>
+		</div>
+	{/if}
 </div>
 
 <style>

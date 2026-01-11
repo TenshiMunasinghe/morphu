@@ -1,6 +1,30 @@
 {
 	"posts": [
 		{
+			"id": "profile-1",
+			"content": "@morphu_user\nCreating beautiful posts with Morphu! 🎨",
+			"isProfile": true,
+			"style": {
+				"borderRadius": "50%",
+				"borderColor": "#000000",
+				"borderWidth": "3px",
+				"borderStyle": "solid",
+				"paddingTop": "24px",
+				"paddingRight": "24px",
+				"paddingBottom": "24px",
+				"paddingLeft": "24px",
+				"textSize": "14px",
+				"textOrientation": "horizontal-tb",
+				"textAlign": "center",
+				"fontFamily": "system-ui, sans-serif",
+				"fontWeight": "700",
+				"fontStyle": "normal",
+				"backgroundColor": "#a7f3d0",
+				"textColor": "#000000"
+			},
+			"createdAt": "2026-01-01T00:00:00Z"
+		},
+		{
 			"id": "demo-1",
 			"content": "Welcome to my profile! 🎨",
 			"style": {
@@ -118,18 +142,12 @@
 	],
 	"whiteboard": {
 		"placements": [
-			{ "postId": "demo-1", "x": 80, "y": 100, "zIndex": 1 },
-			{ "postId": "demo-2", "x": 400, "y": 80, "zIndex": 2 },
-			{ "postId": "demo-3", "x": 150, "y": 320, "zIndex": 3 },
-			{ "postId": "demo-4", "x": 500, "y": 280, "zIndex": 4 },
-			{ "postId": "demo-5", "x": 50, "y": 500, "zIndex": 5 }
-		],
-		"profilePlacement": { "userProfileId": "user-1", "x": 20, "y": 20 }
-	},
-	"profile": {
-		"id": "user-1",
-		"username": "morphu_user",
-		"avatarUrl": "",
-		"bio": "Creating beautiful posts with Morphu! 🎨"
+			{ "postId": "profile-1", "x": 20, "y": 20, "zIndex": 1 },
+			{ "postId": "demo-1", "x": 80, "y": 150, "zIndex": 2 },
+			{ "postId": "demo-2", "x": 400, "y": 80, "zIndex": 3 },
+			{ "postId": "demo-3", "x": 150, "y": 370, "zIndex": 4 },
+			{ "postId": "demo-4", "x": 500, "y": 280, "zIndex": 5 },
+			{ "postId": "demo-5", "x": 50, "y": 550, "zIndex": 6 }
+		]
 	}
 }
