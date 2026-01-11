@@ -26,7 +26,7 @@
 	{#if hasWarnings}
 		<AlertTriangle class="mt-0.5 size-4 shrink-0" />
 		<div class="flex flex-col gap-1">
-			{#each warnings as warning}
+			{#each warnings as warning (warning.message)}
 				<span>{warning.message}</span>
 			{/each}
 		</div>
