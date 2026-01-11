@@ -80,7 +80,7 @@
 	let fontFamily = $state('system-ui, sans-serif');
 	let fontWeight = $state('400');
 	let content = $state(
-		'This is a sample social media post. You can customize its appearance using the form controls!'
+		'これは場合できるだけその卒業院においてものの日にしよませなら。よく昨日で評地もただいまそうした推薦ですますまでを甘んじばならたには反駁食わせろですですから、こうには参りないなでた。'
 	);
 	let backgroundColor = $state('#ffffff');
 	let textColor = $state('#000000');
