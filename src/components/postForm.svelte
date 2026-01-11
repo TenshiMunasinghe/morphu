@@ -10,21 +10,18 @@
 
 	// Preview resize state (vertical only)
 	let previewHeight = $state(200);
-	let isResizing = $state(false);
 
 	function startResize(e: MouseEvent) {
 		e.preventDefault();
-		isResizing = true;
 
 		const startY = e.clientY;
 		const startHeight = previewHeight;
 
 		function onMouseMove(e: MouseEvent) {
-			previewHeight = Math.max(100, Math.min(500, startHeight + (e.clientY - startY)));
+			previewHeight = Math.max(100, Math.min(700, startHeight + (e.clientY - startY)));
 		}
 
 		function onMouseUp() {
-			isResizing = false;
 			document.removeEventListener('mousemove', onMouseMove);
 			document.removeEventListener('mouseup', onMouseUp);
 		}
@@ -139,22 +136,24 @@
 		>
 			Preview
 		</h2>
-		<div class="flex h-full items-center justify-center overflow-auto p-4">
-			<Post
-				{borderRadius}
-				{paddingTop}
-				{paddingRight}
-				{paddingBottom}
-				{paddingLeft}
-				{textSize}
-				{textOrientation}
-				{textAlign}
-				{fontFamily}
-				{fontWeight}
-				{content}
-				{backgroundColor}
-				{textColor}
-			/>
+		<div class="h-full overflow-auto p-4">
+			<div class="flex min-h-full items-center justify-center">
+				<Post
+					{borderRadius}
+					{paddingTop}
+					{paddingRight}
+					{paddingBottom}
+					{paddingLeft}
+					{textSize}
+					{textOrientation}
+					{textAlign}
+					{fontFamily}
+					{fontWeight}
+					{content}
+					{backgroundColor}
+					{textColor}
+				/>
+			</div>
 		</div>
 		<!-- Resize handle (bottom edge) -->
 		<button

@@ -70,6 +70,8 @@
 		word-wrap: break-word;
 		overflow-wrap: break-word;
 		max-width: 100%;
+		max-height: 50ch;
+		overflow-y: auto;
 		box-sizing: border-box;
 	}
 
