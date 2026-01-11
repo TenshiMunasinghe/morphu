@@ -12,6 +12,8 @@
 	import { generatePostId, type PostData, type PostStyle } from '$lib/types/post';
 	import { savePost, addPostPlacement } from '$lib/stores/posts';
 	import { checkAccessibility } from '$lib/lib/accessibility';
+	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
+	import { resolve } from '$app/paths';
 
 	function handleSubmit() {
 		// Check for accessibility warnings
@@ -75,7 +77,7 @@
 		addPostPlacement(post.id, x, y);
 
 		// Navigate to profile page
-		goto('/profile');
+		goto(resolve('/profile/'));
 	}
 
 	// Preview resize state (vertical only)
@@ -110,7 +112,7 @@
 	let paddingRightValue = $state(16);
 	let paddingBottomValue = $state(16);
 	let paddingLeftValue = $state(16);
-	let borderRadiusValue = $state(8);
+	let borderRadiusValue = $state(0);
 	let borderWidthValue = $state(2);
 	let textSizeValue = $state(16);
 
@@ -153,7 +155,7 @@
 	let paddingRight = $derived(`${paddingRightValue}px`);
 	let paddingBottom = $derived(`${paddingBottomValue}px`);
 	let paddingLeft = $derived(`${paddingLeftValue}px`);
-	let borderRadius = $derived(`${borderRadiusValue}px`);
+	let borderRadius = $derived(`${borderRadiusValue}%`);
 	let borderWidth = $derived(`${borderWidthValue}px`);
 	let textSize = $derived(`${textSizeValue}px`);
 
@@ -431,12 +433,13 @@
 
 			<div class="grid grid-cols-2 items-center gap-4">
 				<label for="borderRadius" class="text-sm font-heading text-foreground">Radius</label>
+
 				<Slider
 					id="borderRadius"
 					type="single"
 					bind:value={borderRadiusValue}
 					min={0}
-					max={50}
+					max={100}
 					step={2}
 				/>
 			</div>
