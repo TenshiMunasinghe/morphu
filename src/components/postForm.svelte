@@ -102,11 +102,21 @@
 	);
 </script>
 
-<div class="demo-container">
+<div
+	class="relative flex min-h-screen flex-col bg-linear-to-br from-[#f5f7fa] to-[#c3cfe2] lg:mx-auto lg:grid lg:max-w-[1400px] lg:grid-cols-2 lg:gap-8 lg:p-8"
+>
 	<!-- Preview Section - Fixed at top on mobile -->
-	<div class="preview-section">
-		<h2 class="preview-title">Preview</h2>
-		<div class="preview-container">
+	<div
+		class="sticky top-0 z-10 flex w-full flex-col rounded-b-xl bg-white p-2 shadow-md lg:relative lg:rounded-xl lg:p-8"
+	>
+		<h2
+			class="absolute right-2 bottom-2 z-10 rounded-lg bg-[#363636] p-1 text-center text-xs font-light text-white lg:text-left lg:text-2xl"
+		>
+			Preview
+		</h2>
+		<div
+			class="relative flex max-h-[300px] min-h-[200px] items-center justify-center overflow-auto rounded-lg bg-gray-50 p-2 lg:max-h-none lg:min-h-[400px] lg:p-8"
+		>
 			<Post
 				{borderRadius}
 				{paddingTop}
@@ -126,9 +136,11 @@
 	</div>
 
 	<!-- Form Section - At bottom on mobile -->
-	<div class="form-section">
-		<form class="customization-form">
-			<div class="form-group">
+	<div
+		class="mt-auto flex-1 overflow-y-auto rounded-t-xl bg-white p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] lg:mt-0 lg:max-h-[calc(100vh-4rem)] lg:rounded-xl lg:p-8 lg:shadow-md"
+	>
+		<form class="flex flex-col gap-5 pb-8">
+			<div class="flex flex-col gap-2">
 				<textarea
 					class="resize-none overflow-y-scroll border-none outline-none"
 					id="content"
@@ -164,8 +176,8 @@
 				</div>
 			</div>
 
-			<div class="form-group">
-				<div>Padding</div>
+			<div class="flex flex-col gap-2">
+				<div class="text-sm font-semibold text-gray-700">Padding</div>
 				<PaddingSelector
 					{updateAll}
 					{updateAxis}
@@ -179,8 +191,8 @@
 				/>
 			</div>
 
-			<div class="form-row">
-				<label for="borderRadius">Border Radius</label>
+			<div class="grid grid-cols-2 gap-4">
+				<label for="borderRadius" class="text-sm font-semibold text-gray-700">Border Radius</label>
 				<Slider
 					id="borderRadius"
 					type="single"
@@ -191,30 +203,33 @@
 				/>
 			</div>
 
-			<div class="form-row">
-				<label for="textSize">Text Size</label>
+			<div class="grid grid-cols-2 gap-4">
+				<label for="textSize" class="text-sm font-semibold text-gray-700">Text Size</label>
 				<Slider id="textSize" type="single" bind:value={textSizeValue} min={8} max={48} step={2} />
 
-				<div class="form-group">
-					<label for="fontWeight">Font Weight</label>
-					<div class="font-weight-buttons">
+				<div class="flex flex-col gap-2">
+					<label for="fontWeight" class="text-sm font-semibold text-gray-700">Font Weight</label>
+					<div class="flex gap-2">
 						<Button
 							type="button"
-							class="font-weight-btn {fontWeight === '300' ? 'active' : ''}"
+							variant={fontWeight === '300' ? 'default' : 'outline'}
+							class="flex-1"
 							onclick={() => (fontWeight = '300')}
 						>
 							Light
 						</Button>
 						<Button
 							type="button"
-							class="font-weight-btn {fontWeight === '400' ? 'active' : ''}"
+							variant={fontWeight === '400' ? 'default' : 'outline'}
+							class="flex-1"
 							onclick={() => (fontWeight = '400')}
 						>
 							Normal
 						</Button>
 						<Button
 							type="button"
-							class="font-weight-btn {fontWeight === '700' ? 'active' : ''}"
+							variant={fontWeight === '700' ? 'default' : 'outline'}
+							class="flex-1"
 							onclick={() => (fontWeight = '700')}
 						>
 							Bold
@@ -223,20 +238,23 @@
 				</div>
 			</div>
 
-			<div class="form-group font-select-container">
-				<label for="fontFamily">Font Family</label>
+			<div class="relative flex flex-col gap-2">
+				<label for="fontFamily" class="text-sm font-semibold text-gray-700">Font Family</label>
 				<Button
 					type="button"
-					class="font-select-trigger"
+					variant="outline"
+					class="flex w-full items-center justify-between"
 					onclick={toggleFontSelect}
 					aria-expanded={isFontSelectOpen}
 					aria-haspopup="listbox"
 				>
-					<span class="font-select-value" style:font-family={selectedFont.font}>
+					<span class="flex-1 text-left" style:font-family={selectedFont.font}>
 						{selectedFont.label}
 					</span>
 					<svg
-						class="font-select-icon"
+						class="ml-2 h-4 w-4 shrink-0 text-gray-500 transition-transform duration-200 {isFontSelectOpen
+							? 'rotate-180'
+							: ''}"
 						width="15"
 						height="15"
 						viewBox="0 0 15 15"
@@ -252,12 +270,16 @@
 					</svg>
 				</Button>
 				{#if isFontSelectOpen}
-					<div class="font-select-content">
+					<div
+						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-[300px] flex-col overflow-y-auto rounded-md border border-gray-300 bg-white shadow-lg"
+					>
 						{#each fontFamilies as font (font.value)}
 							<button
 								type="button"
-								class="font-select-item"
-								class:active={font.value === fontFamily}
+								class="cursor-pointer border-none bg-white p-3 text-left text-sm transition-colors first:rounded-t-md last:rounded-b-md hover:bg-gray-100 {font.value ===
+								fontFamily
+									? 'bg-blue-50 text-blue-800'
+									: ''}"
 								onclick={() => selectFont(font.value)}
 								style:font-family={font.font}
 							>
@@ -268,17 +290,19 @@
 				{/if}
 			</div>
 
-			<div class="form-row grid grid-cols-2 gap-2">
-				<div class="form-group">
-					<label for="textOrientation">Text Orientation</label>
+			<div class="grid grid-cols-2 gap-2">
+				<div class="flex flex-col gap-2">
+					<label for="textOrientation" class="text-sm font-semibold text-gray-700"
+						>Text Orientation</label
+					>
 					<TextOrientationSelector
 						{textOrientation}
 						setTextOrientation={(newValue: TextOrientation) => (textOrientation = newValue)}
 					/>
 				</div>
 
-				<div class="form-group">
-					<label for="textAlign">Text Alignment</label>
+				<div class="flex flex-col gap-2">
+					<label for="textAlign" class="text-sm font-semibold text-gray-700">Text Alignment</label>
 					<TextAlignmentSelector
 						{textAlign}
 						onTextAlignmentChange={(newValue: TextAlignment) => (textAlign = newValue)}
@@ -288,340 +312,3 @@
 		</form>
 	</div>
 </div>
-
-<style>
-	.demo-container {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-		background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-		position: relative;
-	}
-
-	/* Preview Section - Fixed at top on mobile */
-	.preview-section {
-		background: white;
-		border-radius: 0 0 12px 12px;
-		padding: 0.5rem;
-		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		display: flex;
-		flex-direction: column;
-		position: sticky;
-		top: 0;
-		z-index: 10;
-		width: 100%;
-	}
-
-	.preview-title {
-		font-size: 0.75rem;
-		font-weight: 300;
-		color: #ffffff;
-		background: #363636;
-		text-align: center;
-		position: absolute;
-		padding: 0.25rem;
-		border-radius: 0.5rem;
-		bottom: 0.5rem;
-		right: 0.5rem;
-		z-index: 10;
-		opacity: 1;
-	}
-
-	.preview-container {
-		position: relative;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 0.5rem;
-		background: #f9fafb;
-		border-radius: 8px;
-		min-height: 200px;
-		max-height: 300px;
-		overflow: auto;
-	}
-
-	/* Form Section - At bottom on mobile */
-	.form-section {
-		background: white;
-		border-radius: 12px 12px 0 0;
-		padding: 1.5rem;
-		box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-		flex: 1;
-		overflow-y: auto;
-		margin-top: auto;
-	}
-
-	.customization-form {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-		padding-bottom: 2rem;
-	}
-
-	.form-row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-	}
-
-	.form-group {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.form-group label {
-		font-weight: 600;
-		color: #374151;
-		font-size: 0.875rem;
-	}
-
-	.padding-quick-controls {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1rem;
-		margin-bottom: 1rem;
-		padding: 1rem;
-		background: #eff6ff;
-		border-radius: 8px;
-		border: 1px solid #bfdbfe;
-	}
-
-	.padding-quick-controls .form-group {
-		margin: 0;
-	}
-
-	.padding-controls {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 1rem;
-		padding: 1rem;
-		background: #f9fafb;
-	}
-
-	.padding-controls .form-group {
-		margin: 0;
-	}
-
-	@media (max-width: 1023px) {
-		.padding-quick-controls {
-			grid-template-columns: 1fr;
-		}
-	}
-
-	.section-label {
-		font-weight: 600;
-		color: #374151;
-		font-size: 0.875rem;
-		margin-bottom: 0.5rem;
-	}
-
-	.form-group input[type='text'],
-	.form-group select {
-		padding: 0.75rem;
-		border: 1px solid #d1d5db;
-		border-radius: 6px;
-		font-size: 0.875rem;
-		transition:
-			border-color 0.2s,
-			box-shadow 0.2s;
-		width: 100%;
-		box-sizing: border-box;
-	}
-
-	.form-group input[type='text']:focus,
-	.form-group select:focus {
-		outline: none;
-		border-color: #3b82f6;
-		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-	}
-
-	.color-input-group {
-		display: flex;
-		gap: 0.75rem;
-		align-items: center;
-	}
-
-	.color-input-group input[type='color'] {
-		width: 60px;
-		height: 40px;
-		border: 1px solid #d1d5db;
-		border-radius: 6px;
-		cursor: pointer;
-		flex-shrink: 0;
-	}
-
-	.color-text-input {
-		flex: 1;
-	}
-
-	/* Shadcn-style Select */
-	.font-select-container {
-		position: relative;
-	}
-
-	.font-select-trigger {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-		padding: 0.75rem;
-		border: 1px solid #d1d5db;
-		border-radius: 6px;
-		background: white;
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition:
-			border-color 0.2s,
-			box-shadow 0.2s;
-	}
-
-	.font-select-trigger:hover {
-		border-color: #9ca3af;
-	}
-
-	.font-select-trigger[aria-expanded='true'] {
-		border-color: #3b82f6;
-		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-	}
-
-	.font-select-value {
-		flex: 1;
-		text-align: left;
-	}
-
-	.font-select-icon {
-		width: 15px;
-		height: 15px;
-		color: #6b7280;
-		transition: transform 0.2s;
-		flex-shrink: 0;
-		margin-left: 0.5rem;
-	}
-
-	.font-select-trigger[aria-expanded='true'] .font-select-icon {
-		transform: rotate(180deg);
-	}
-
-	.font-select-content {
-		position: absolute;
-		top: calc(100% + 4px);
-		left: 0;
-		right: 0;
-		background: white;
-		border: 1px solid #d1d5db;
-		border-radius: 6px;
-		box-shadow:
-			0 4px 6px -1px rgba(0, 0, 0, 0.1),
-			0 2px 4px -1px rgba(0, 0, 0, 0.06);
-		z-index: 50;
-		max-height: 300px;
-		overflow-y: auto;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.font-select-item {
-		padding: 0.75rem;
-		text-align: left;
-		border: none;
-		background: white;
-		cursor: pointer;
-		font-size: 0.875rem;
-		transition: background-color 0.15s;
-		border-radius: 0;
-	}
-
-	.font-select-item:first-child {
-		border-radius: 6px 6px 0 0;
-	}
-
-	.font-select-item:last-child {
-		border-radius: 0 0 6px 6px;
-	}
-
-	.font-select-item:hover {
-		background: #f3f4f6;
-	}
-
-	.font-select-item.active {
-		background: #eff6ff;
-		color: #1e40af;
-	}
-
-	/* Font Weight Buttons */
-	.font-weight-buttons {
-		display: flex;
-		gap: 0.5rem;
-	}
-
-	.font-weight-btn {
-		flex: 1;
-		padding: 0.5rem 1rem;
-		border: 1px solid #d1d5db;
-		border-radius: 6px;
-		background: white;
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition:
-			background-color 0.2s,
-			border-color 0.2s,
-			color 0.2s;
-	}
-
-	.font-weight-btn:hover {
-		background: #f3f4f6;
-		border-color: #9ca3af;
-	}
-
-	.font-weight-btn.active {
-		background: #3b82f6;
-		color: white;
-		border-color: #3b82f6;
-	}
-
-	/* Desktop Layout */
-	@media (min-width: 1024px) {
-		.demo-container {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 2rem;
-			padding: 2rem;
-			max-width: 1400px;
-			margin: 0 auto;
-		}
-
-		.preview-section {
-			position: relative;
-			border-radius: 12px;
-			padding: 2rem;
-			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-		}
-
-		.preview-title {
-			font-size: 1.5rem;
-			text-align: left;
-		}
-
-		.preview-container {
-			padding: 2rem;
-			min-height: 400px;
-			max-height: none;
-		}
-
-		.form-section {
-			border-radius: 12px;
-			padding: 2rem;
-			box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-			margin-top: 0;
-			max-height: calc(100vh - 4rem);
-		}
-	}
-
-	/* Mobile optimizations */
-	@media (max-width: 1023px) {
-		.preview-container {
-			min-height: 150px;
-		}
-	}
-</style>
