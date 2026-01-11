@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DraggablePost from './draggablePost.svelte';
 	import type { PostData } from '$lib/types/post';
-	import type { WhiteboardState, PostPlacement } from '$lib/types/whiteboard';
+	import type { WhiteboardState, PostPlacement, UserProfile } from '$lib/types/whiteboard';
 	import { SvelteMap } from 'svelte/reactivity';
 
 	const CANVAS_SIZE = 2026;
@@ -10,6 +10,7 @@
 		posts: PostData[];
 		demoPostIds?: Set<string>;
 		initialState?: WhiteboardState;
+		profile?: UserProfile;
 		onStateChange?: (state: WhiteboardState) => void;
 		onDeletePost?: (postId: string) => void;
 	}
@@ -18,6 +19,7 @@
 		posts,
 		demoPostIds = new Set(),
 		initialState,
+		profile,
 		onStateChange,
 		onDeletePost
 	}: Props = $props();
@@ -132,7 +134,8 @@
 			x={placement.x}
 			y={placement.y}
 			zIndex={placement.zIndex}
-			isDemoPost={demoPostIds.has(post.id) || post.isProfile === true}
+			isDemoPost={demoPostIds.has(post.id)}
+			{profile}
 			onPositionChange={handlePositionChange}
 			onDragStart={handleDragStart}
 			onDelete={handleDelete}

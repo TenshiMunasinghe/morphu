@@ -8,3 +8,10 @@ export interface PostPlacement {
 export interface WhiteboardState {
 	placements: PostPlacement[];
 }
+
+export interface UserProfile {
+	username: string;
+	userId: string;
+	birthday?: string;
+	bio?: string;
+}

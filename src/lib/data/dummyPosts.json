@@ -1,8 +1,14 @@
 {
+	"profile": {
+		"username": "morphu_user",
+		"userId": "@morphu_user",
+		"birthday": "January 1, 2000",
+		"bio": "Creating beautiful posts with Morphu! 🎨"
+	},
 	"posts": [
 		{
 			"id": "profile-1",
-			"content": "@morphu_user\nCreating beautiful posts with Morphu! 🎨",
+			"content": "hi, its me. @morphu_user",
 			"isProfile": true,
 			"style": {
 				"borderRadius": "50%",

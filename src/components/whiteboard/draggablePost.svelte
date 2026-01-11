@@ -4,6 +4,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { X } from 'lucide-svelte';
 	import type { PostData } from '$lib/types/post';
+	import type { UserProfile } from '$lib/types/whiteboard';
 
 	interface Props {
 		post: PostData;
@@ -11,6 +12,7 @@
 		y: number;
 		zIndex?: number;
 		isDemoPost?: boolean;
+		profile?: UserProfile;
 		onPositionChange?: (postId: string, x: number, y: number) => void;
 		onDragStart?: (postId: string) => void;
 		onDelete?: (postId: string) => void;
@@ -22,6 +24,7 @@
 		y,
 		zIndex = 1,
 		isDemoPost = false,
+		profile,
 		onPositionChange,
 		onDragStart,
 		onDelete
@@ -124,14 +127,24 @@
 		textColor={post.style.textColor}
 	/>
 
-	{#if post.isProfile && isPopoverOpen}
+	{#if post.isProfile && isPopoverOpen && profile}
 		<div
 			class="absolute top-full left-0 z-50 mt-2 w-64 rounded-base border-2 border-border bg-secondary-background p-4 shadow-shadow"
 		>
-			<div class="flex flex-col gap-2">
-				<p class="text-sm font-base text-foreground/80">
-					This is your profile post. You can style it however you like!
-				</p>
+			<div class="flex flex-col gap-3">
+				<div>
+					<h3 class="text-lg font-heading text-foreground">{profile.username}</h3>
+					<p class="text-xs text-foreground/60">{profile.userId}</p>
+				</div>
+				{#if profile.birthday}
+					<div class="flex items-center gap-2 text-sm text-foreground/80">
+						<span>🎂</span>
+						<span>{profile.birthday}</span>
+					</div>
+				{/if}
+				{#if profile.bio}
+					<p class="text-sm font-base text-foreground/80">{profile.bio}</p>
+				{/if}
 			</div>
 		</div>
 	{/if}

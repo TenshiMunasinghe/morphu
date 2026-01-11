@@ -64,7 +64,8 @@
 			id: generatePostId(),
 			content,
 			style,
-			createdAt: new Date().toISOString()
+			createdAt: new Date().toISOString(),
+			isProfile
 		};
 
 		// Save post to localStorage
@@ -168,6 +169,7 @@
 	);
 	let backgroundColor = $state('#ffffff');
 	let textColor = $state('#000000');
+	let isProfile = $state(false);
 	let isFontSelectOpen = $state(false);
 
 	const fontFamilies = [
@@ -464,6 +466,33 @@
 					class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
 				/>
 			</div>
+
+			<label class="mt-4 flex cursor-pointer items-center gap-3">
+				<button
+					type="button"
+					role="checkbox"
+					aria-checked={isProfile}
+					class="flex h-5 w-5 items-center justify-center rounded-base border-2 border-border bg-background transition-colors"
+					class:bg-primary={isProfile}
+					onclick={() => (isProfile = !isProfile)}
+				>
+					{#if isProfile}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="3"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							class="h-3 w-3 text-primary-foreground"
+						>
+							<polyline points="20 6 9 17 4 12"></polyline>
+						</svg>
+					{/if}
+				</button>
+				<span class="text-sm font-heading text-foreground">Set as Profile Post</span>
+			</label>
 
 			<Button type="button" class="mt-4 w-full" onclick={handleSubmit}>Submit Post</Button>
 		</form>
