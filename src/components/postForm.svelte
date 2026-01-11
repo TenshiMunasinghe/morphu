@@ -7,6 +7,8 @@
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { ChevronDown } from 'lucide-svelte';
+	import * as Resizable from '$lib/components/ui/resizable';
+	import { PaneResizer } from 'paneforge';
 
 	// Numerical values as numbers for sliders
 	let paddingTopValue = $state(16);
@@ -103,47 +105,50 @@
 	);
 </script>
 
-<div
-	class="relative flex min-h-screen flex-col bg-linear-to-br from-[#f5f7fa] to-[#c3cfe2] lg:mx-auto lg:grid lg:max-w-350 lg:grid-cols-2 lg:gap-8 lg:p-8"
+<Resizable.PaneGroup
+	direction="vertical"
+	class="h-screen bg-background lg:mx-auto lg:max-w-350 lg:p-8"
 >
 	<!-- Preview Section - Fixed at top on mobile -->
-	<div
-		class="sticky top-0 z-10 flex w-full flex-col rounded-b-xl bg-white p-2 shadow-md lg:relative lg:rounded-xl lg:p-8"
+	<Resizable.Pane
+		defaultSize={25}
+		minSize={10}
+		class="relative z-10 flex w-full flex-col overflow-y-auto rounded-base border-b-0 border-border bg-secondary-background p-8 shadow-none"
 	>
 		<h2
-			class="absolute right-2 bottom-2 z-10 rounded-lg bg-[#363636] p-1 text-center text-xs font-light text-white lg:text-left lg:text-2xl"
+			class="absolute right-1 bottom-1 z-10 rounded-base border-2 border-border bg-foreground p-1 text-center text-xs font-base text-secondary-background lg:text-left lg:text-2xl"
 		>
 			Preview
 		</h2>
-		<div
-			class="relative flex max-h-75 min-h-50 items-center justify-center overflow-auto rounded-lg bg-gray-50 p-2 lg:max-h-none lg:min-h-100 lg:p-8"
-		>
-			<Post
-				{borderRadius}
-				{paddingTop}
-				{paddingRight}
-				{paddingBottom}
-				{paddingLeft}
-				{textSize}
-				{textOrientation}
-				{textAlign}
-				{fontFamily}
-				{fontWeight}
-				{content}
-				{backgroundColor}
-				{textColor}
-			/>
-		</div>
-	</div>
+		<Post
+			{borderRadius}
+			{paddingTop}
+			{paddingRight}
+			{paddingBottom}
+			{paddingLeft}
+			{textSize}
+			{textOrientation}
+			{textAlign}
+			{fontFamily}
+			{fontWeight}
+			{content}
+			{backgroundColor}
+			{textColor}
+		/>
+	</Resizable.Pane>
+
+	<Resizable.Handle withHandle />
 
 	<!-- Form Section - At bottom on mobile -->
-	<div
-		class="mt-auto flex-1 overflow-y-auto rounded-t-xl bg-white p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] lg:mt-0 lg:max-h-[calc(100vh-4rem)] lg:rounded-xl lg:p-8 lg:shadow-md"
+	<Resizable.Pane
+		defaultSize={75}
+		minSize={20}
+		class="overflow-y-auto bg-secondary-background p-6 shadow-shadow lg:p-8"
 	>
-		<form class="flex flex-col gap-5 pb-8">
+		<form class="flex flex-col gap-8 pb-8">
 			<div class="flex flex-col gap-2">
 				<textarea
-					class="resize-none overflow-y-scroll border-none outline-none"
+					class="resize-none overflow-y-scroll bg-secondary-background p-3 font-base outline-none"
 					id="content"
 					bind:value={content}
 					rows="4"
@@ -151,34 +156,34 @@
 				></textarea>
 			</div>
 
-			<Separator class="my-2" />
+			<Separator class="my-4" />
 
-			<h2 class="mb-2 text-center text-lg font-bold">Style your Post!</h2>
+			<h2 class="text-center text-lg font-heading">Style your Post!</h2>
 
 			<div class="grid grid-cols-2 gap-8 text-sm">
 				<div class="flex items-center justify-between gap-2">
-					<label for="textColor">Text</label>
+					<label for="textColor" class="font-base">Text</label>
 					<input
 						type="color"
 						id="textColor"
 						bind:value={textColor}
-						class="h-9 w-9 rounded-full outline-2 outline-neutral-700"
+						class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
 					/>
 				</div>
 
 				<div class="flex items-center justify-between gap-2">
-					<label for="backgroundColor">Background</label>
+					<label for="backgroundColor" class="font-base">Background</label>
 					<input
 						type="color"
 						id="backgroundColor"
 						bind:value={backgroundColor}
-						class="h-9 w-9 rounded-full outline-2 outline-neutral-700"
+						class="h-10 w-10 cursor-pointer rounded-base border-2 border-border shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
 					/>
 				</div>
 			</div>
 
-			<div class="flex flex-col gap-2">
-				<div class="text-sm font-semibold text-gray-700">Padding</div>
+			<div class="flex flex-col gap-3">
+				<div class="text-sm font-heading text-foreground">Padding</div>
 				<PaddingSelector
 					{updateAll}
 					{updateAxis}
@@ -192,8 +197,8 @@
 				/>
 			</div>
 
-			<div class="grid grid-cols-2 gap-4">
-				<label for="borderRadius" class="text-sm font-semibold text-gray-700">Border Radius</label>
+			<div class="grid grid-cols-2 items-center gap-4">
+				<label for="borderRadius" class="text-sm font-heading text-foreground">Border Radius</label>
 				<Slider
 					id="borderRadius"
 					type="single"
@@ -204,43 +209,43 @@
 				/>
 			</div>
 
-			<div class="grid grid-cols-2 gap-4">
-				<label for="textSize" class="text-sm font-semibold text-gray-700">Text Size</label>
+			<div class="grid grid-cols-2 items-center gap-4">
+				<label for="textSize" class="text-sm font-heading text-foreground">Text Size</label>
 				<Slider id="textSize" type="single" bind:value={textSizeValue} min={8} max={48} step={2} />
+			</div>
 
-				<div class="flex flex-col gap-2">
-					<label for="fontWeight" class="text-sm font-semibold text-gray-700">Font Weight</label>
-					<div class="flex gap-2">
-						<Button
-							type="button"
-							variant={fontWeight === '300' ? 'default' : 'outline'}
-							class="flex-1"
-							onclick={() => (fontWeight = '300')}
-						>
-							Light
-						</Button>
-						<Button
-							type="button"
-							variant={fontWeight === '400' ? 'default' : 'outline'}
-							class="flex-1"
-							onclick={() => (fontWeight = '400')}
-						>
-							Normal
-						</Button>
-						<Button
-							type="button"
-							variant={fontWeight === '700' ? 'default' : 'outline'}
-							class="flex-1"
-							onclick={() => (fontWeight = '700')}
-						>
-							Bold
-						</Button>
-					</div>
+			<div class="flex flex-col gap-3">
+				<label for="fontWeight" class="text-sm font-heading text-foreground">Font Weight</label>
+				<div class="flex gap-2">
+					<Button
+						type="button"
+						variant={fontWeight === '300' ? 'default' : 'outline'}
+						class="flex-1"
+						onclick={() => (fontWeight = '300')}
+					>
+						Light
+					</Button>
+					<Button
+						type="button"
+						variant={fontWeight === '400' ? 'default' : 'outline'}
+						class="flex-1"
+						onclick={() => (fontWeight = '400')}
+					>
+						Normal
+					</Button>
+					<Button
+						type="button"
+						variant={fontWeight === '700' ? 'default' : 'outline'}
+						class="flex-1"
+						onclick={() => (fontWeight = '700')}
+					>
+						Bold
+					</Button>
 				</div>
 			</div>
 
-			<div class="font-select-container relative flex flex-col gap-2">
-				<label for="fontFamily" class="text-sm font-semibold text-gray-700">Font Family</label>
+			<div class="font-select-container relative flex flex-col gap-3">
+				<label for="fontFamily" class="text-sm font-heading text-foreground">Font Family</label>
 				<Button
 					type="button"
 					variant="outline"
@@ -256,14 +261,14 @@
 				</Button>
 				{#if isFontSelectOpen}
 					<div
-						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-75 flex-col overflow-y-auto rounded-md border border-gray-300 bg-white shadow-lg"
+						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-75 flex-col overflow-y-auto rounded-base border-2 border-border bg-secondary-background shadow-shadow"
 					>
 						{#each fontFamilies as font (font.value)}
 							<button
 								type="button"
-								class="cursor-pointer border-none bg-white p-3 text-left text-sm transition-colors first:rounded-t-md last:rounded-b-md hover:bg-gray-100 {font.value ===
+								class="cursor-pointer border-b-2 border-border bg-secondary-background p-3 text-left text-sm font-base transition-colors last:border-b-0 hover:bg-primary hover:text-primary-foreground {font.value ===
 								fontFamily
-									? 'bg-blue-50 text-blue-800'
+									? 'bg-primary text-primary-foreground'
 									: ''}"
 								onclick={() => selectFont(font.value)}
 								style:font-family={font.font}
@@ -275,9 +280,9 @@
 				{/if}
 			</div>
 
-			<div class="grid grid-cols-2 gap-2">
-				<div class="flex flex-col gap-2">
-					<label for="textOrientation" class="text-sm font-semibold text-gray-700"
+			<div class="grid grid-cols-2 gap-4">
+				<div class="flex flex-col gap-3">
+					<label for="textOrientation" class="text-sm font-heading text-foreground"
 						>Text Orientation</label
 					>
 					<TextOrientationSelector
@@ -286,8 +291,8 @@
 					/>
 				</div>
 
-				<div class="flex flex-col gap-2">
-					<label for="textAlign" class="text-sm font-semibold text-gray-700">Text Alignment</label>
+				<div class="flex flex-col gap-3">
+					<label for="textAlign" class="text-sm font-heading text-foreground">Text Alignment</label>
 					<TextAlignmentSelector
 						{textAlign}
 						onTextAlignmentChange={(newValue: TextAlignment) => (textAlign = newValue)}
@@ -295,5 +300,5 @@
 				</div>
 			</div>
 		</form>
-	</div>
-</div>
+	</Resizable.Pane>
+</Resizable.PaneGroup>

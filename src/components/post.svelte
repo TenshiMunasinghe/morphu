@@ -48,7 +48,7 @@
 </script>
 
 <div
-	class="post-container"
+	class="post-container border-2 border-border shadow-shadow"
 	style:border-radius={borderRadius}
 	style:padding-top={paddingTop}
 	style:padding-right={paddingRight}
