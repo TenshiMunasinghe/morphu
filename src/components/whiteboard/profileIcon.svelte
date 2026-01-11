@@ -40,7 +40,7 @@
 </script>
 
 <div
-	class="profile-icon-container absolute z-50 cursor-grab active:cursor-grabbing"
+	class="profile-icon-container absolute z-9999 cursor-grab active:cursor-grabbing"
 	use:draggable={{
 		position,
 		onDragEnd: handleDragEnd
@@ -48,7 +48,7 @@
 >
 	<button
 		type="button"
-		class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-3 border-border bg-primary shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
+		class="z-9999 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-3 border-border bg-primary shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
 		onclick={togglePopover}
 		aria-label="View profile"
 	>
@@ -61,7 +61,7 @@
 
 	{#if isPopoverOpen}
 		<div
-			class="absolute top-full left-0 mt-2 w-64 rounded-base border-2 border-border bg-secondary-background p-4 shadow-shadow"
+			class="absolute top-full left-0 z-9999 mt-2 w-64 rounded-base border-2 border-border bg-secondary-background p-4 shadow-shadow"
 		>
 			<div class="flex flex-col gap-2">
 				<h3 class="text-lg font-heading text-foreground">@{profile.username}</h3>
