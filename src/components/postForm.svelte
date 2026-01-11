@@ -6,6 +6,7 @@
 	import TextAlignmentSelector, { type TextAlignment } from './textAlignmentSelector.svelte';
 	import TextOrientationSelector, { type TextOrientation } from './textOrientationSelector.svelte';
 	import Separator from '$lib/components/ui/separator/separator.svelte';
+	import { ChevronDown } from 'lucide-svelte';
 
 	// Numerical values as numbers for sliders
 	let paddingTopValue = $state(16);
@@ -103,7 +104,7 @@
 </script>
 
 <div
-	class="relative flex min-h-screen flex-col bg-linear-to-br from-[#f5f7fa] to-[#c3cfe2] lg:mx-auto lg:grid lg:max-w-[1400px] lg:grid-cols-2 lg:gap-8 lg:p-8"
+	class="relative flex min-h-screen flex-col bg-linear-to-br from-[#f5f7fa] to-[#c3cfe2] lg:mx-auto lg:grid lg:max-w-350 lg:grid-cols-2 lg:gap-8 lg:p-8"
 >
 	<!-- Preview Section - Fixed at top on mobile -->
 	<div
@@ -115,7 +116,7 @@
 			Preview
 		</h2>
 		<div
-			class="relative flex max-h-[300px] min-h-[200px] items-center justify-center overflow-auto rounded-lg bg-gray-50 p-2 lg:max-h-none lg:min-h-[400px] lg:p-8"
+			class="relative flex max-h-75 min-h-50 items-center justify-center overflow-auto rounded-lg bg-gray-50 p-2 lg:max-h-none lg:min-h-100 lg:p-8"
 		>
 			<Post
 				{borderRadius}
@@ -238,7 +239,7 @@
 				</div>
 			</div>
 
-			<div class="relative flex flex-col gap-2">
+			<div class="font-select-container relative flex flex-col gap-2">
 				<label for="fontFamily" class="text-sm font-semibold text-gray-700">Font Family</label>
 				<Button
 					type="button"
@@ -251,27 +252,11 @@
 					<span class="flex-1 text-left" style:font-family={selectedFont.font}>
 						{selectedFont.label}
 					</span>
-					<svg
-						class="ml-2 h-4 w-4 shrink-0 text-gray-500 transition-transform duration-200 {isFontSelectOpen
-							? 'rotate-180'
-							: ''}"
-						width="15"
-						height="15"
-						viewBox="0 0 15 15"
-						fill="none"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z"
-							fill="currentColor"
-							fill-rule="evenodd"
-							clip-rule="evenodd"
-						></path>
-					</svg>
+					<ChevronDown />
 				</Button>
 				{#if isFontSelectOpen}
 					<div
-						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-[300px] flex-col overflow-y-auto rounded-md border border-gray-300 bg-white shadow-lg"
+						class="absolute top-[calc(100%+4px)] right-0 left-0 z-50 flex max-h-75 flex-col overflow-y-auto rounded-md border border-gray-300 bg-white shadow-lg"
 					>
 						{#each fontFamilies as font (font.value)}
 							<button
