@@ -49,7 +49,7 @@
 >
 	<button
 		type="button"
-		class="z-9999 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-3 border-border bg-primary shadow-shadow transition-all hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none"
+		class="z-9999 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-3 border-border bg-primary transition-all"
 		onclick={togglePopover}
 		aria-label="View profile"
 	>
