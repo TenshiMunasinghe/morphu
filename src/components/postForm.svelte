@@ -12,23 +12,28 @@
 	// Preview resize state (vertical only)
 	let previewHeight = $state(200);
 
-	function startResize(e: MouseEvent) {
+	function startResize(e: MouseEvent | TouchEvent) {
 		e.preventDefault();
 
-		const startY = e.clientY;
+		const startY = 'touches' in e ? e.touches[0].clientY : e.clientY;
 		const startHeight = previewHeight;
 
-		function onMouseMove(e: MouseEvent) {
-			previewHeight = Math.max(100, Math.min(700, startHeight + (e.clientY - startY)));
+		function onMove(e: MouseEvent | TouchEvent) {
+			const currentY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+			previewHeight = Math.max(100, Math.min(700, startHeight + (currentY - startY)));
 		}
 
-		function onMouseUp() {
-			document.removeEventListener('mousemove', onMouseMove);
-			document.removeEventListener('mouseup', onMouseUp);
+		function onEnd() {
+			document.removeEventListener('mousemove', onMove);
+			document.removeEventListener('mouseup', onEnd);
+			document.removeEventListener('touchmove', onMove);
+			document.removeEventListener('touchend', onEnd);
 		}
 
-		document.addEventListener('mousemove', onMouseMove);
-		document.addEventListener('mouseup', onMouseUp);
+		document.addEventListener('mousemove', onMove);
+		document.addEventListener('mouseup', onEnd);
+		document.addEventListener('touchmove', onMove);
+		document.addEventListener('touchend', onEnd);
 	}
 
 	// Numerical values as numbers for sliders
@@ -171,6 +176,7 @@
 			type="button"
 			class="absolute bottom-0 left-1/2 z-10 flex h-4 w-8 -translate-x-1/2 translate-y-1/2 cursor-ns-resize items-center justify-center rounded-sm border-2 border-border bg-primary"
 			onmousedown={startResize}
+			ontouchstart={startResize}
 			aria-label="Resize preview vertically"
 		>
 			<GripHorizontal class="size-3 text-primary-foreground" />
