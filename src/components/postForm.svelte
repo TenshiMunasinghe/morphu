@@ -12,7 +12,6 @@
 	import { generatePostId, type PostData, type PostStyle } from '$lib/types/post';
 	import { savePost, addPostPlacement } from '$lib/stores/posts';
 	import { checkAccessibility } from '$lib/lib/accessibility';
-	import Checkbox from '$lib/components/ui/checkbox/checkbox.svelte';
 	import { resolve } from '$app/paths';
 
 	function handleSubmit() {

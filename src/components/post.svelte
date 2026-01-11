@@ -50,9 +50,34 @@
 		editable = false,
 		onContentChange
 	}: Props = $props();
+
+	let containerEl: HTMLDivElement | undefined = $state();
+
+	// Sync content to element using innerText (preserves newlines, XSS-safe)
+	$effect(() => {
+		if (containerEl && !editable) {
+			containerEl.innerText = content;
+		}
+	});
+
+	// For editable mode, only set initial content
+	$effect(() => {
+		if (containerEl && editable && containerEl.innerText !== content) {
+			// Only set if element is empty (initial mount)
+			if (containerEl.innerText === '') {
+				containerEl.innerText = content;
+			}
+		}
+	});
+
+	function handleInput(e: Event) {
+		const target = e.target as HTMLElement;
+		onContentChange?.(target.innerText);
+	}
 </script>
 
 <div
+	bind:this={containerEl}
 	class="post-container"
 	style:border-radius={borderRadius}
 	style:border-width={borderWidth}
@@ -70,21 +95,16 @@
 	style:font-style={fontStyle}
 	style:background-color={backgroundColor}
 	style:color={textColor}
-	oninput={(e) => {
-		onContentChange?.((e.target as HTMLElement)?.textContent ?? '');
-	}}
+	style:white-space="pre"
+	oninput={handleInput}
 	contenteditable={editable}
->
-	{content}
-</div>
+></div>
 
 <style>
 	.post-container {
-		word-wrap: break-word;
-		overflow-wrap: break-word;
 		max-width: 100%;
 		max-height: 50ch;
-		overflow-y: auto;
+		overflow: auto;
 		box-sizing: border-box;
 	}
 
