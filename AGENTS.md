@@ -38,10 +38,7 @@ This document describes the code style conventions and UI design patterns used i
 	}
 
 	// 3. Props destructuring with defaults
-	let {
-		prop1,
-		prop2 = 'default'
-	}: Props = $props();
+	let { prop1, prop2 = 'default' }: Props = $props();
 
 	// 4. State declarations
 	let localState = $state('initial');
@@ -135,15 +132,15 @@ src/
 
 Use Tailwind's spacing scale consistently:
 
-| Context | Spacing |
-|---------|---------|
-| Between major form sections | `gap-8` |
-| Between label and control | `gap-3` |
-| Within button groups | `gap-2` |
-| Grid column gaps | `gap-4` |
-| Separator margins | `my-4` |
-| Container padding (mobile) | `p-2` to `p-6` |
-| Container padding (desktop) | `p-8` |
+| Context                     | Spacing        |
+| --------------------------- | -------------- |
+| Between major form sections | `gap-8`        |
+| Between label and control   | `gap-3`        |
+| Within button groups        | `gap-2`        |
+| Grid column gaps            | `gap-4`        |
+| Separator margins           | `my-4`         |
+| Container padding (mobile)  | `p-2` to `p-6` |
+| Container padding (desktop) | `p-8`          |
 
 ### Layout Patterns
 
@@ -183,14 +180,14 @@ Use Tailwind's spacing scale consistently:
 
 ```css
 /* Light mode */
---background: oklch(95.08% 0.0481 184.07);    /* Teal-tinted light gray */
---foreground: oklch(0% 0 0);                   /* Black */
---primary: oklch(78.57% 0.1422 180.36);        /* Teal */
---border: oklch(0% 0 0);                       /* Black */
+--background: oklch(95.08% 0.0481 184.07); /* Teal-tinted light gray */
+--foreground: oklch(0% 0 0); /* Black */
+--primary: oklch(78.57% 0.1422 180.36); /* Teal */
+--border: oklch(0% 0 0); /* Black */
 
 /* Dark mode */
---background: oklch(22.65% 0.0236 198.49);    /* Dark teal */
---foreground: oklch(92.49% 0 0);               /* Near white */
+--background: oklch(22.65% 0.0236 198.49); /* Dark teal */
+--foreground: oklch(92.49% 0 0); /* Near white */
 ```
 
 #### Semantic Colors
@@ -222,9 +219,7 @@ Use shadcn-svelte Button with variants:
 <Button variant="outline">Option</Button>
 
 <!-- Toggle pattern -->
-<Button variant={isActive ? 'default' : 'outline'}>
-	Toggle
-</Button>
+<Button variant={isActive ? 'default' : 'outline'}>Toggle</Button>
 ```
 
 Button sizes: `default`, `sm`, `lg`, `icon`, `icon-sm`, `icon-lg`
@@ -271,7 +266,7 @@ For custom select dropdowns (not using native select):
 		<ChevronDown />
 	</Button>
 	{#if isOpen}
-		<div class="absolute top-[calc(100%+4px)] ... z-50">
+		<div class="absolute top-[calc(100%+4px)] z-50 ...">
 			<!-- dropdown items -->
 		</div>
 	{/if}
@@ -283,13 +278,7 @@ For custom select dropdowns (not using native select):
 #### Sliders
 
 ```svelte
-<Slider
-	type="single"
-	bind:value={numericValue}
-	min={0}
-	max={100}
-	step={2}
-/>
+<Slider type="single" bind:value={numericValue} min={0} max={100} step={2} />
 ```
 
 ### Shadows and Borders
