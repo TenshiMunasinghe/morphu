@@ -79,6 +79,17 @@ Design the content feed experience. The term "timeline" may need reconsideration
 - How to handle posts of varying aspect ratios and sizes
 - Preview vs. full-view states
 
+### Bulletin Board Concept
+
+A bulletin board metaphor could provide an interesting alternative or complement to traditional feed designs. Posts could be pinned to a virtual board, allowing for:
+
+- **Spatial Organization**: Users arrange posts on a board-like surface, creating visual clusters or themes
+- **Pin/Unpin Interaction**: Posts can be pinned in specific locations, creating a more intentional, curated layout
+- **Board Sections**: Different areas of the board could represent different topics, time periods, or moods
+- **Tactile Aesthetic**: Visual styling that mimics physical bulletin boards (cork texture, push pins, overlapping papers)
+- **Hybrid Approach**: Combine bulletin board layout with timeline functionality—new posts appear in a "recent" area, then users can pin favorites to their board
+- **Personal vs. Shared Boards**: Individual users have their own board, but could also create or follow shared community boards
+
 ---
 
 ## 4. Infinite Canvas Navigation
