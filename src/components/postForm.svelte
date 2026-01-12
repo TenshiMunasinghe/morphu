@@ -216,8 +216,9 @@
 		class="sticky top-0 z-50 w-full border-b-4 border-border bg-secondary-background"
 		style:height="{previewHeight}px"
 	>
-		<div class="h-full overflow-auto p-4">
-			<div class="flex min-h-full items-center justify-center overflow-scroll">
+		<div class="h-full overflow-auto p-4 lg:h-auto">
+			// todo fix desktop view; must scroll to see submit button
+			<div class="flex min-h-full items-center justify-center">
 				<Post
 					{borderRadius}
 					{borderColor}
@@ -242,6 +243,9 @@
 			</div>
 			<div class="absolute top-2 left-2 z-10">
 				<AccessibilityBanner {textColor} {backgroundColor} textSize={textSizeValue} {fontWeight} />
+			</div>
+			<div class="absolute right-2 bottom-2 z-10">
+				<Button type="button" onclick={handleSubmit}>Submit Post</Button>
 			</div>
 		</div>
 		<!-- Resize handle (bottom edge) -->
@@ -492,8 +496,6 @@
 				</button>
 				<span class="text-sm font-heading text-foreground">Set as Profile Post</span>
 			</label>
-
-			<Button type="button" class="mt-4 w-full" onclick={handleSubmit}>Submit Post</Button>
 		</form>
 	</div>
 </div>
@@ -526,6 +528,9 @@
 			/>
 			<div class="absolute top-4 left-4">
 				<AccessibilityBanner {textColor} {backgroundColor} textSize={textSizeValue} {fontWeight} />
+			</div>
+			<div class="absolute right-4 bottom-4">
+				<Button type="button" onclick={handleSubmit}>Submit Post</Button>
 			</div>
 		</div>
 	</div>
@@ -782,8 +787,6 @@
 				</button>
 				<span class="text-sm font-heading text-foreground">Set as Profile Post</span>
 			</label>
-
-			<Button type="button" class="mt-4 w-full" onclick={handleSubmit}>Submit Post</Button>
 		</form>
 	</div>
 </div>
