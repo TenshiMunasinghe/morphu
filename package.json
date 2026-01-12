@@ -44,6 +44,7 @@
 	"dependencies": {
 		"@neodrag/svelte": "^2.3.3",
 		"lucide-svelte": "^0.562.0",
+		"tailwind-merge": "^3.4.0",
 		"tailwind-variants": "^3.2.2"
 	}
 }
