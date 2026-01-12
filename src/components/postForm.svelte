@@ -217,7 +217,7 @@
 		style:height="{previewHeight}px"
 	>
 		<div class="h-full overflow-auto p-4 lg:h-auto">
-			// todo fix desktop view; must scroll to see submit button
+			<!-- // todo fix desktop view; must scroll to see submit button -->
 			<div class="flex min-h-full items-center justify-center">
 				<Post
 					{borderRadius}
