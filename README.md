@@ -150,10 +150,3 @@ See [FUTURE_PLANS.md](./FUTURE_PLANS.md) for upcoming features including:
 - [UI_UX_REPORT.md](./UI_UX_REPORT.md) - UI/UX design patterns and accessibility features
 - [FUTURE_PLANS.md](./FUTURE_PLANS.md) - Planned features and design considerations
 
-## License
-
-[Add your license here]
-
-## Contributing
-
-[Add contributing guidelines here]
